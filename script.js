@@ -1,4 +1,4 @@
-// ===== DATA (dimuat dari localStorage)
+// ===== DATA (dimuat dari localStorage) =====
 function muatData(kunci) {
     try {
         return JSON.parse(localStorage.getItem(kunci))  || [];
@@ -8,11 +8,11 @@ function muatData(kunci) {
 }
 
 function simpanData() {
-    localStorage.setItem("incomes", JSON.stringify(incomes));
+    localStorage.setItem("income", JSON.stringify(income));
     localStorage.setItem("goals", JSON.stringify(goals));
 }
 
-const income = muatData("incomes");
+const income = muatData("income");
 const goals = muatData("goals");
 // ===== ELEMEN HTML YANG DIPAKAI =====
 const balanceEl = document.getElementById("balance")
@@ -27,7 +27,7 @@ function formatRupiah(angka) {
 // saldo = total pemasukan - uang yang udah masuk ke goals 
 function hitungSaldo() {
     let totalPemasukan = 0;
-    for (const item of incomes) 
+    for (const item of income) 
         totalPemasukan += item.amount;
     
     let totalTabungan = 0;
@@ -43,7 +43,7 @@ function tampilkanSaldo() {
 
 function tampilkanPemasukan() {
     incomeList.innerHTML = "";
-    for (const item of incomes) {
+    for (const item of income) {
         const li = document.createElement("li");
         li.textContent = `${item.desc} (${item.category}) - ${formatRupiah(item.amount)}`;
         incomeList.appendChild(li);
@@ -85,7 +85,7 @@ document.getElementById("add-income").addEventListener("click", function () {
         return;
     }
 
-    incomes.push({ desc, category, type, amount });
+    income.push({ desc, category, type, amount });
     simpanData();
     tampilkanPemasukan();
     tampilkanSaldo();
