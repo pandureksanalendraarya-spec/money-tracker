@@ -1,0 +1,129 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    line-height:  1.5;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+h2 {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+}
+
+/* ===== KARTU TIAP SECTION ===== */
+section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== SALDO =====  */
+.summary {
+    background: #0f766e;
+    color:  #ffffff;
+}
+
+.summary h2 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+#balance {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* ===== FORM ===== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+label {
+    font-size: 0.85;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+input,
+select {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #ffffff;
+}
+
+input:focus,
+select:focus {
+    outline:2px solid #0f766e;
+    border-color: transparent;
+}
+
+button {
+    margin-top: 14px;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    background: #0f766e;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    bacckground: #115e59;
+}
+
+/* ===== LIST PEMASUKAN =====  */
+#income-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+}
+
+#income-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#income-list li:last-child {
+    border-bottom: none;
+}
+/* ===== TABEL GOAL ===== */
+table {
+    width: 100%;
+    margin-top: 16px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding; 10px 8px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #64748b;
+}
