@@ -8,88 +8,98 @@
         <script src="script.js" defer></script>
     </head>
     <body>
-        <h1>Money Tracker</h1>
+        <header>
+            <h1>Money Tracker</h1>
+            <button type="button" id="reset-all" class="danger">Reset Semua Data</button>
+        </header>
 
-        <section class="summary">
-            <h2>Saldo</h2>
-            <p id="balance">Rp 0</p>
-        </section>
+        <main class="grid">
+            <section class="summary">
+                <h2>Saldo</h2>
+                <p id="balance">Rp 0</p>
+            </section>
 
-        <section class="income">
-            <h2>Pemasukan</h2>
-            <form>
-                <label for="income-desc">Deskripsi</label>
-                <input type="text" id="income-desc" placeholder="Contoh: Monthly Pay">
+            <section class="income">
+                <h2>Pemasukan</h2>
+                <form>
+                    <label for="income-desc">Deskripsi</label>
+                    <input type="text" id="income-desc" placeholder="Contoh: Monthly Pay">
 
-                <label for="income-category">Kategori</label>
-                <input type="text" id="income-category" placeholder="Contoh: Payroll">
+                    <label for="income-category">Kategori</label>
+                    <input type="text" id="income-category" placeholder="Contoh: Payroll">
 
-                <label for="income-type">Tipe</label>
-                <select id="income-type">
-                    <option value="income">Income</option>
-                    <option value="other">Lainnya</option>
-                </select>
+                    <label for="income-type">Tipe</label>
+                    <select id="income-type">
+                        <option value="income">Income</option>
+                        <option value="other">Lainnya</option>
+                    </select>
 
-                <label for="income-amount">Jumlah (Rp)</label>
-                <input type="number" id="income-amount" min="0">
+                    <label for="income-amount">Jumlah (Rp)</label>
+                    <input type="number" id="income-amount" min="0">
 
-                <button type="button" id="add-income">Simpan Pemasukan</button>
-            </form>
-            <ul id="income-list"></ul>
-        </section>
+                    <button type="button" id="add-income">Simpan Pemasukan</button>
+                </form>
+                <ul id="income-list"></ul>
+            </section>
 
-        <section class="goals">
-            <h2>Goals Nabung</h2>
-            <form>
-                <label for="goal-name">Nama Goal</label>
-                <input type="text" id="goal-name" placeholder="Contoh:Sepeda">
+            <section>
+                <h2>Goals Nabung</h2>
+                <form>
+                    <label for="goal-name">Nama Goal</label>
+                    <input type="text" id="goal-name" placeholder="Contoh: Sepeda">
+                    
+                    <label for="goal-target">Target (Rp)</label>
+                    <input type="number" id="goal-target" min="0">
 
-                <label for="goal-target">Target (Rp)</label>
-                <input type="number" id="goal-target" min="0">
+                    <label for="goal-amount">Setoran (Rp)</label>
+                    <input type="number" id="goal-amount" min="0">
 
-                <label for="goal-amount">Setoran (Rp)</label>
-                <input type="number" id="goal-amount" min="0">
+                    <button type="button" id="add-goal">Setoran ke Goal</button>
+                </form>
 
-                <button type="button" id="add-goal">Setoran ke Goal</button>
-            </form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Goal</th>
+                            <th>Target</th>
+                            <th>Terkumpul</th>
+                            <th>Progress</th>
+                            <th>Kebeli</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="goal-list"></tbody>
+                </table>
+            </section>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Goal</th>
-                        <th>Target</th>
-                        <th>Terkumpul</th>
-                        <th>Progress</th>
-                    </tr>
-                </thead>
-                <tbody id="goal-list"></tbody>
-            </table>
-        </section>
+            <section class="expense">
+                <h2>Pengeluaran Harian</h2>
+                <form>
+                    <label for="expense-date">Tanggal</label>
+                    <input type="date" id="expense-date">
 
-        <section class="expense">
-            <h2>Pengeluaran Harian</h2>
-            <form>
-                <label for="expense-date">Tanggal</label>
-                <input type="date" id="expense-date">
+                    <label for="expense-desc">Deskripsi</label>
+                    <input type="text" id="expense-desc" placeholder="Contoh: Makan Siang">
 
-                <label for="expense-desc">Deskripsi </label>
-                <input type="text" id="expense-desc" placeholder="Contoh: Makan Siang">
+                    <label for="expense-amount">Jumlah (Rp)</label>
+                    <input type="number" id="expense-amount" min="0">
 
-                <label for="expense-amount">Jumlah (Rp)</label>
-                <input type="number" id="expense-amount" min="0">
+                    <button type="button" id="add-expense">Tambah Pengeluaran</button>
+                </form>
+                <ul id="expense-list"></ul>
+            </section>
 
-                <button type="button">Tambah Pengeluaran</button>
-            </form>
-        </section>
+            <section class="budget">
+                <h2>Budget Bulanan</h2>
+                <form>
+                    <label for="budget-target">Target (Rp)</label>
+                    <input type="number" id="budget-target" min="0">
 
-        <section class="budget">
-            <h2>Budget Bulanan</h2>
-            <form>
-                <label for="budget-target">Target (Rp)</label>
-                <input type="number" id="budget-target" min="0">
-
-                <button type="button">Simpan Budget</button>
-            </form>
-        </section>
+                    <button type="button" id="save-budget">Simpan Budget</button>
+                </form>
+                <p id="budget-info"></p>
+                <div class="bar"><div id="budget-bar"></div></div>
+            </section>
+        </main>
     </body>
 </html>

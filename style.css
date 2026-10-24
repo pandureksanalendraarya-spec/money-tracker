@@ -6,15 +6,21 @@ body {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     background: #f1f5f9;
     color: #1e293b;
-    max-width: 720px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 24px 16px 48px;
-    line-height:  1.5;
+    line-height: 1.5;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 24px;
+    margin: 0;
 }
 
 h2 {
@@ -22,25 +28,42 @@ h2 {
     font-size: 1.1rem;
 }
 
-/* ===== KARTU TIAP SECTION ===== */
+/* ===== LAYOUT 2 KOLOM =====*/
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.summary {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 800px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== KARTU ===== */
 section {
     background: #ffffff;
     border-radius: 12px;
     padding: 20px;
-    margin-bottom: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* ===== SALDO =====  */
 .summary {
-    background: #0f766e;
-    color:  #ffffff;
+    background: #0f7663;
+    color: #ffffff;
 }
 
 .summary h2 {
     font-size: 0.9rem;
     font-weight: 500;
     opacity: 0.85;
+    margin-bottom: 4px;
 }
 
 #balance {
@@ -49,7 +72,7 @@ section {
     font-weight: 700;
 }
 
-/* ===== FORM ===== */
+/* ===== FORM =====*/
 form {
     display: flex;
     flex-direction: column;
@@ -57,12 +80,12 @@ form {
 }
 
 label {
-    font-size: 0.85;
+    font-size: 0.85rem;
     font-weight: 600;
     margin-top: 8px;
 }
 
-input,
+input:not([type="checkbox"]),
 select {
     padding: 10px 12px;
     border: 1px solid #cbd5e1;
@@ -74,7 +97,7 @@ select {
 
 input:focus,
 select:focus {
-    outline:2px solid #0f766e;
+    outline: 2px solid #0f766e;
     border-color: transparent;
 }
 
@@ -91,39 +114,91 @@ button {
 }
 
 button:hover {
-    bacckground: #115e59;
+    background: #115e59;
 }
 
-/* ===== LIST PEMASUKAN =====  */
-#income-list {
+button.danger {
+    background: #dc2626;
+}
+
+button.danger:hover {
+    background: #b91c1c;
+}
+
+button.small {
+    margin: 0;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+}
+
+/* ===== LIST ===== */
+#income-list,
+#expense-list {
     list-style: none;
     padding: 0;
     margin: 16px 0 0;
+    max-height: 260px;
+    overflow-y: auto;
 }
 
-#income-list li {
+#income-list li,
+#expense-list li {
     padding: 10px 0;
     border-bottom: 1px solid #e2e8f0;
 }
 
-#income-list li:last-child {
+#incomee-list li:last-child,
+#expense-list li:last-child {
     border-bottom: none;
 }
+
 /* ===== TABEL GOAL ===== */
 table {
     width: 100%;
     margin-top: 16px;
     border-collapse: collapse;
+    font-size: 0.9rem;
 }
 
 th,
 td {
-    padding; 10px 8px;
+    padding: 10px 6px;
     text-align: left;
     border-bottom: 1px solid #e2e8f0;
 }
+
 th {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     color: #64748b;
+}
+
+tr.done td {
+    text-decoration: line-through;
+    color: #94a3b8;
+}
+
+tr.done td:nth-child(5) {
+    text-decoration: none;
+}
+
+/* ===== BUDGET ===== */
+#budget-info {
+    margin: 16px 0 8px;
+    font-size: 0.9rem;
+}
+
+.bar {
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+#budget-bar.warn {
+    background: #f59e0b;
+}
+
+#budget-bar.over {
+    background: #dc2626;
 }

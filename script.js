@@ -16,7 +16,7 @@ function simpanData() {
 
 const incomes = muatData("incomes");
 const goals = muatData("goals");
-const expense = muatData("expense");
+const expenses = muatData("expenses");
 let budget = Number(localStorage.getItem("budget")) || 0;
 
 // ===== ELEMEN =====
@@ -41,15 +41,15 @@ function hitungSaldo() {
     let total = 0;
     for (const item of incomes) total += item.amount;
     for (const goal of goals) total -= goal.current;
-    for (const e of expense) total -= e.amount;
+    for (const e of expenses) total -= e.amount;
     return total;
 }
 
 function hitungPengeluaranBulanIni() {
     const bulanIni = hariIni().slice(0, 7);  //YYYY-MM
     let total = 0;
-    for (const e of expense) {
-        if (e.date.startWith(bulanIni)) total += e.amount;
+    for (const e of expenses) {
+        if (e.date.startsWith(bulanIni)) total += e.amount;
     }
     return total;
 }
@@ -63,18 +63,18 @@ function tampilkanPemasukan() {
     incomeList.innerHTML = "";
     for (const item of incomes) {
         const li = document.createElement("li");
-        li.contextContent = `${item.desc} (${item.category}) - ${formatRupiah(item.amount)}`;
+        li.textContent = `${item.desc} (${item.category}) - ${formatRupiah(item.amount)}`;
         incomeList.appendChild(li);
     }
 }
 
 function tampilkanPengeluaran() {
     expenseList.innerHTML = "";
-    const urut = [...expense].sort((a, b) => b.date.localeCompare(a.date));
+    const urut = [...expenses].sort((a, b) => b.date.localeCompare(a.date));
     for (const e of urut) {
         const li = document.createElement("li");
         li.textContent = `${e.date} | ${e.desc} - ${formatRupiah(e.amount)}`;
-        expenseList.appendChild();
+        expenseList.appendChild(li);
     }
 }
 
@@ -183,7 +183,7 @@ document.getElementById("add-income").addEventListener("click", function () {
 
     document.getElementById("income-desc").value = "";
     document.getElementById("income-category").value = "";
-    document,getElementById("income-amount").value = "";
+    document.getElementById("income-amount").value = "";
 });
 
 // ===== GOAL =====
@@ -201,11 +201,12 @@ document.getElementById("add-goal").addEventListener("click", function () {
         return;
     }
 
-    const goalAda = goals.find(g => g.name.toLowerCase() === name,toLowerCase());
+    const goalAda = goals.find(g => g.name.toLowerCase() === name.toLowerCase());
 
     if (goalAda) {
         if (goalAda.done) {
             alert("Goal ini sudah ditandai kebeli. Uncheck dulu kalau mau nambah setoran.");
+            return;
         }
         goalAda.current += setoran;
         if (target > 0) goalAda.target = target;
@@ -214,7 +215,7 @@ document.getElementById("add-goal").addEventListener("click", function () {
             alert("Goal baru butuh target (lebih dari 0).");
             return;
         }
-        goals.push({ name, current: setoran, done: false });
+        goals.push({ name, target, current: setoran, done: false });
     }
 
     simpanData();
@@ -242,7 +243,7 @@ document.getElementById("add-expense").addEventListener("click", function () {
         alert("Saldo tidak cukup.");
         return;
     }
-    expense.push({ date, desc, amount });
+    expenses.push({ date, desc, amount });
     simpanData();
     tampilkanPengeluaran();
     tampilkanBudget();
@@ -262,7 +263,7 @@ document.getElementById("save-budget").addEventListener("click", function () {
         return;
     }
     budget = nilai;
-    simpanaData();
+    simpanData();
     tampilkanBudget();
 });
 
@@ -272,7 +273,9 @@ const ok = confirm("Hapus SEMUA data (pemasukan, goal, pengeluaran, budget)? Tid
 if (!ok) return;
 localStorage.removeItem("incomes");
 localStorage.removeItem("goals");
-localStorage.removeItem("expense");
+localStorage.removeItem("expenses");
 localStorage.removeItem("budget");
 location.reload();
 });
+
+tampilkanSemua();
