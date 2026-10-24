@@ -1,9 +1,21 @@
-// ===== DATA =====
-const incomes = [];
-const goals =[];
+// ===== DATA (dimuat dari localStorage)
+function muatData(kunci) {
+    try {
+        return JSON.parse(localStorage.getItem(kunci))  || [];
+    } catch {
+        return [];
+    }
+}
 
+function simpanData() {
+    localStorage.setItem("incomes", JSON.stringify(incomes));
+    localStorage.setItem("goals", JSON.stringify(goals));
+}
+
+const income = muatData("incomes");
+const goals = muatData("goals");
 // ===== ELEMEN HTML YANG DIPAKAI =====
-const balanceE1 = document.getElementById("balance")
+const balanceEl = document.getElementById("balance")
 const incomeList = document.getElementById("income-list")
 const goalList = document.getElementById("goal-list")
 
@@ -26,7 +38,7 @@ function hitungSaldo() {
     return totalPemasukan - totalTabungan
 }
 function tampilkanSaldo() {
-    balanceE1.textContent = formatRupiah(hitungSaldo());
+    balanceEl.textContent = formatRupiah(hitungSaldo());
 }
 
 function tampilkanPemasukan() {
@@ -74,6 +86,7 @@ document.getElementById("add-income").addEventListener("click", function () {
     }
 
     incomes.push({ desc, category, type, amount });
+    simpanData();
     tampilkanPemasukan();
     tampilkanSaldo();
 
@@ -110,7 +123,8 @@ document.getElementById("add-goal").addEventListener("click", function () {
         }
         goals.push({ name, target, current: setoran });
     }
-
+    
+    simpanData();
     tampilkanGoals();
     tampilkanSaldo();
 
@@ -119,4 +133,6 @@ document.getElementById("add-goal").addEventListener("click", function () {
     document.getElementById("goal-amount").value = "";
 });
 
+tampilkanPemasukan();
+tampilkanGoals();
 tampilkanSaldo();
