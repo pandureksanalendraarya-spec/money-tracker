@@ -15,13 +15,13 @@ function formatRupiah(angka) {
 // saldo = total pemasukan - uang yang udah masuk ke goals 
 function hitungSaldo() {
     let totalPemasukan = 0;
-    for (const item of incomes) {
+    for (const item of incomes) 
         totalPemasukan += item.amount;
-    }
+    
     let totalTabungan = 0;
-    for (const goal of goals) {
+    for (const goal of goals) 
         totalTabungan += goal.current;
-    }
+    
 
     return totalPemasukan - totalTabungan
 }
@@ -30,16 +30,16 @@ function tampilkanSaldo() {
 }
 
 function tampilkanPemasukan() {
-    incomeList,innerHTML = "";
+    incomeList.innerHTML = "";
     for (const item of incomes) {
         const li = document.createElement("li");
-        li.textContent = '${item.desc} (${item.category}) - ${formatRupiah(item.amount)}';
+        li.textContent = `${item.desc} (${item.category}) - ${formatRupiah(item.amount)}`;
         incomeList.appendChild(li);
     }
 }
 
 function tampilkanGoals() {
-    goalList.innerHTML = ""=;
+    goalList.innerHTML = "";
     for (const goal of goals) {
         const row = document.createElement("tr");
         const persen = Math.min(100, Math.round((goal.current / goal.target) * 100));
@@ -74,7 +74,7 @@ document.getElementById("add-income").addEventListener("click", function () {
     }
 
     incomes.push({ desc, category, type, amount });
-    tampilkanPemasukan():
+    tampilkanPemasukan();
     tampilkanSaldo();
 
     document.getElementById("income-desc").value = "";
@@ -87,19 +87,36 @@ document.getElementById("add-income").addEventListener("click", function () {
 document.getElementById("add-goal").addEventListener("click", function () {
     const name = document.getElementById("goal-name").value.trim();
     const target = Number(document.getElementById("goal-target").value);
-    const current = Number(document.getElementById("goal-current").value);
+    const setoran = Number(document.getElementById("goal-amount").value);
 
-    if (name === "" || target  <= 0 || current < 0) {
-        alert("Isi nama goal dan target (lebih dari 0).");
+    if (name === "" || setoran <= 0) {
+        alert("Isi nama goal dan setoran (lebih dari 0).");
         return;
     }
-    goals.push({ name, target, current });
+    if (setoran > hitungSaldo()) {
+        alert("Saldo tidak cukup.");
+        return;
+    }
+
+    const goalAda = goals.find(g => g.name.toLowerCase() === name.toLowerCase());
+
+    if (goalAda) {
+        goalAda.current += setoran;
+        if (target > 0) goalAda.target = target;
+    } else {
+        if (target <= 0) {
+            alert("Goal baru butuh target (lebih dari 0).");
+            return;
+        }
+        goals.push({ name, target, current: setoran });
+    }
+
     tampilkanGoals();
     tampilkanSaldo();
 
-    document.getElementsById("goal-name").value = "";
+    document.getElementById("goal-name").value = "";
     document.getElementById("goal-target").value = "";
-    document.getElementById("goal-current").value = "";
+    document.getElementById("goal-amount").value = "";
 });
 
 tampilkanSaldo();
