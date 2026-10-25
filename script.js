@@ -26,6 +26,7 @@ const goalList =  document.getElementById("goal-list");
 const expenseList = document.getElementById("expense-list");
 const budgetInfo = document.getElementById("budget-info");
 const budgetBar =  document.getElementById("budget-bar");
+const kartuBudget = document.querySelector(".budget");
 
 // ===== FUNGSI BANTU =====
 function formatRupiah(angka) {
@@ -45,15 +46,6 @@ function hitungSaldo() {
     return total;
 }
 
-function hitungPengeluaranBulanIni() {
-    const bulanIni = hariIni().slice(0, 7);  //YYYY-MM
-    let total = 0;
-    for (const e of expenses) {
-        if (e.date.startsWith(bulanIni)) total += e.amount;
-    }
-    return total;
-}
-
 // ===== TAMPILAN =====//
 function tampilkanSaldo() {
     balanceEl.textContent = formatRupiah(hitungSaldo());
@@ -68,27 +60,76 @@ function tampilkanPemasukan() {
     }
 }
 
+function hitungPengeluaranBulanIni() {
+    let total = 0;
+    for (const e of expenses) {
+        if (!e.archived) total += e.amount;
+    }
+    return total;
+}
+
 function tampilkanPengeluaran() {
     expenseList.innerHTML = "";
-    const urut = [...expenses].sort((a, b) => b.date.localeCompare(a.date));
+    const urut = expenses.filter (e => !e.archived).sort ((a, b) => b.date.localeCompare(a.date));
     for (const e of urut) {
         const li = document.createElement("li");
-        li.textContent = `${e.date} | ${e.desc} - ${formatRupiah(e.amount)}`;
-        expenseList.appendChild(li);
+
+        const teks = document.createElement("span");
+        teks.textContent = `${e.date} | ${e.desc} - ${formatRupiah(e.amount)}`;
+
+        const btnEdit = document.createElement("button");
+        btnEdit.type = "button";
+        btnEdit.textContent = "Edit";
+        btnEdit.className = "small";
+        btnEdit.addEventListener("click", function () {
+            const input = prompt("Nominal baru:", e.amount);
+            if (input === null) return;
+            const baru = Number(input);
+            if (isNaN(baru) || baru <= 0) {
+                alert("Nominal harus angka lebih dari 0." );
+                return;
+            }
+            if (hitungSaldo() + e.amount - baru < 0) {
+                alert("Saldo jadi minus, nominal terlalu besar.");
+                return;
+            }
+            e.amount = baru;
+            simpanData();
+            tampilkanPengeluaran();
+            tampilkanBudget();
+            tampilkanSaldo();
+            });
+
+            const btnHapus = document.createElement("button");
+            btnHapus.type = "button";
+            btnHapus.textContent = "Hapus";
+            btnHapus.className = "small danger";
+            btnHapus.addEventListener("click", function () {
+                if (!confirm(`Hapus "${e.desc}"?`)) return;
+                expenses.splice(expenses.indexOf(e), 1);
+                simpanData();
+                tampilkanPengeluaran();
+                tampilkanBudget();
+                tampilkanSaldo();
+            });
+
+            li.append(teks, btnEdit, btnHapus);
+            expenseList.appendChild(li);
     }
 }
 
 function tampilkanBudget() {
     const terpakai = hitungPengeluaranBulanIni();
     budgetBar.className = "";
+    kartuBudget.classList.remove("over-card");
 
     if (budget <= 0) {
-        budgetInfo.textContent = `Budget belum diatur. Terpakai bulan ini: ${formatRupiah(terpakai)}`;
+        budgetInfo.textContent = `Budget belum diatur. Terpakai periode ini: ${formatRupiah(terpakai)}`;
         budgetBar.style.width = "0%";
         return;
     }
 
-    const persen = Math.round((terpakai / budget) *100);
+    const persen = Math.round((terpakai / budget) * 100);
     const sisa = budget - terpakai;
     budgetBar.style.width = Math.min(100, persen) + "%";
 
@@ -96,8 +137,9 @@ function tampilkanBudget() {
         budgetInfo.textContent = `Terpakai ${formatRupiah(terpakai)} dari ${formatRupiah(budget)} (${persen}%). Sisa ${formatRupiah(sisa)}.`;
         if (persen >= 80) budgetBar.className = "warn";
     } else {
-        budgetInfo.textContent = `Over budget ${formatRupiah(-sisa)}! Terpakai ${formatRupiah(terpakai)} dari ${formatRupiah(budget)}.`;
+        budgetInfo.textContent = `Over budget ${formatRupiah(-sisa)} ! Terpakai ${formatRupiah(terpakai)} dari ${formatRupiah(budget)}.`;
         budgetBar.className = "over";
+        kartuBudget.classList.add("over-card");
     }
 }
 
@@ -148,6 +190,29 @@ function tampilkanGoals() {
                 tampilkanGoals();
                 tampilkanSaldo();
             });
+
+            const btnSetor = document.createElement("button");
+            btnSetor.type ="button";
+            btnSetor.textContent = "+ Setor";
+            btnSetor.className = "small";
+            btnSetor.addEventListener("click", function () {
+                const input = prompt(`Setor berapa ke "${goal.name}"?`);
+                if (input === null) return;
+                const setoran = Number(input);
+                if (isNaN(setoran) || setoran <= 0) {
+                    alert("Setoran harus angka lebih dari 0.");
+                    return;
+                }
+                if (setoran > hitungSaldo()) {
+                    alert("Saldo tidak cukup.");
+                    return;
+                }
+                goal.current += setoran;
+                simpanData();
+                tampilkanGoals();
+                tampilkanSaldo();
+            });
+            tdHapus.appendChild(btnSetor);
             tdHapus.appendChild(btn);
         }
         row.appendChild(tdHapus);
@@ -243,7 +308,7 @@ document.getElementById("add-expense").addEventListener("click", function () {
         alert("Saldo tidak cukup.");
         return;
     }
-    expenses.push({ date, desc, amount });
+    expenses.push({ date, desc, amount, archived: false });
     simpanData();
     tampilkanPengeluaran();
     tampilkanBudget();
@@ -282,6 +347,17 @@ location.reload();
 document.getElementById("export-data").addEventListener("click", function () {
     const data = { incomes, goals, expenses, budget };
     const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json" });
+    const file = new File([JSON.stringify(data, null, 2)], `money-tracker-${hariIni()}.json`, { type: "application/json"});
+    const fileTeks = new File([JSON.stringify(data, null, 2)], `money-tracker-${hariIni()}.json`, { type: "text/plain" });
+
+    const yangBisa = [file, fileTeks].find(f => navigator.canShare && navigator.canShare({ files: [f] }));
+    
+    if (yangBisa) {
+        navigator.share({ files: [yangBisa] }).catch(function (err) {
+            if (err.name !== "AbortError") alert("Share gagal: " + err.name);
+        });
+        return;
+    };
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
@@ -327,6 +403,16 @@ document.getElementById("import-data").addEventListener("change", function (even
     };
     reader.readAsText(file);
     event.target.value = "";
+});
+
+// ===== RESET PENGELUARAN =====
+document.getElementById("reset-expenses").addEventListener("click", function () {
+    if (!confirm("Mulai periode baru? Pengeluaran  lama disembunyikan, saldo tetap.")) return;
+    for (const e of expenses) e.archived = true;
+    simpanData();
+    tampilkanPengeluaran();
+    tampilkanBudget();
+    tampilkanSaldo();
 });
 
 tampilkanSemua();

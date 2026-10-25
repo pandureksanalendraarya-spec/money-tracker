@@ -208,3 +208,19 @@ tr.done td:nth-child(5) {
     gap: 8px;
     flex-wrap: wrap;
 }
+
+#expense-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#expense-list li span {
+    flex: 1;
+    min-width: 0;
+}
+
+td button + button {
+    margin-left: 6px;
+}
