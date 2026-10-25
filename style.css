@@ -224,3 +224,20 @@ tr.done td:nth-child(5) {
 td button + button {
     margin-left: 6px;
 }
+
+.budget.over-card {
+    background: #fef2f2;
+    border: 2px solid #dc2626;
+}
+
+.budget.over-card #budget-info {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+#budget-bar {
+    height: 100%;
+    width: 0%;
+    background: #0f766e;
+    transition: width 0.3s;
+}

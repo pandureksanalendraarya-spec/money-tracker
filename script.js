@@ -416,3 +416,7 @@ document.getElementById("reset-expenses").addEventListener("click", function () 
 });
 
 tampilkanSemua();
+
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+}
