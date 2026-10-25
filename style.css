@@ -202,3 +202,9 @@ tr.done td:nth-child(5) {
 #budget-bar.over {
     background: #dc2626;
 }
+
+.aksi {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
