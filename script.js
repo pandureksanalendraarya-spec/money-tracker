@@ -233,7 +233,7 @@ document.getElementById("expense-date").value = hariIni();
 document.getElementById("add-expense").addEventListener("click", function () {
     const date = document.getElementById("expense-date").value;
     const desc = document.getElementById("expense-desc").value.trim();
-    const amount = Number(document.getElementById("expenese.amount").value);
+    const amount = Number(document.getElementById("expense-amount").value);
 
     if (date === "" || desc === "" || amount <= 0) {
         alert("Isi tanggal, deskripsi, dan jumlah(lebih dari 0).");
