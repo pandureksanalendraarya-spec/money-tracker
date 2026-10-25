@@ -10,7 +10,13 @@
     <body>
         <header>
             <h1>Money Tracker</h1>
-            <button type="button" id="reset-all" class="danger">Reset Semua Data</button>
+            <div class="aksi">
+                <button type="button" id="export-data">Export</button>
+                <button type="button" id="import-btn">Import</button>
+                <input type="file" id="import-data" accept=".json" hidden>
+                <button type="button" id="reset-all" class="danger">Reset Semua Data</button>
+            </div> 
+            
         </header>
 
         <main class="grid">
