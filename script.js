@@ -278,4 +278,55 @@ localStorage.removeItem("budget");
 location.reload();
 });
 
+// ===== EXPORT =====
+document.getElementById("export-data").addEventListener("click", function () {
+    const data = { incomes, goals, expenses, budget };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `money-tracker-${hariIni()}.json`;
+    a.click();
+
+    URL.revokeObjectURL(url);
+});
+
+// ===== IMPORT =====
+document.getElementById("import-btn").addEventListener("click", function () {
+    document.getElementById("import-data").click();
+});
+
+document.getElementById("import-data").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function () {
+        try {
+            const data = JSON.parse(reader.result);
+            if (!Array.isArray(data.incomes) || !Array.isArray(data.goals) || !Array.isArray(data.expenses)) {
+                throw new Error("format salah");
+            }
+            if (!confirm("Data sekarang akan DITIMPA isi file. Lanjut")) return;
+
+            incomes.length = 0;
+            incomes.push(...data.incomes);
+            goals.length = 0;
+            goals.push(...data.goals);
+            expenses.length = 0;
+            expenses.push(...data.expenses);
+            budget = Number(data.budget) || 0;
+
+            document.getElementById("budget-target").value = budget > 0 ? budget : "";
+            simpanData();
+            tampilkanSemua();
+        } catch {
+            alert("File tidak valid");
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = "";
+});
+
 tampilkanSemua();
