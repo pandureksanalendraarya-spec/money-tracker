@@ -1,7 +1,8 @@
-const CACHE = "money-tracker-v1";
+const CACHE = "money-tracker-v2";
 const FILES = ["./", "./index.html", "./script.js", "./style.css"];
 
 self.addEventListener("install", e => {
+    self.skipWaiting();
     e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
 });
 

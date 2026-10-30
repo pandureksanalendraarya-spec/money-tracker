@@ -83,20 +83,24 @@
 
             <section class="expense">
                 <h2>Pengeluaran Harian</h2>
-                <form>
+                <button type="button" id="toggle-expense">Add +</button>
+                <p id="expense-today"></p>
+
+                <form id="expense-form" hidden>
                     <label for="expense-date">Tanggal</label>
                     <input type="date" id="expense-date">
 
-                    <label for="expense-desc">Deskripsi</label>
-                    <input type="text" id="expense-desc" placeholder="Contoh: Makan Siang">
-
+                    <label for="expense-desc">Pengeluaran Apa?</label>
+                    <input type="text" id="expense-desc">
+                    
                     <label for="expense-amount">Jumlah (Rp)</label>
-                    <input type="number" id="expense-amount" min="0">
+                    <input type="number" id="expense-amount">
 
-                    <button type="button" id="add-expense">Tambah Pengeluaran</button>
+                    <button type="button" id="add-expense">Simpan</button>
                 </form>
+
                 <ul id="expense-list"></ul>
-                <button type="button" id="reset-expenses" class="danger small">Reset Pengeluaran</button>
+                <button type="button" id="reset-expense" class="danger small">Reset Pengeluaran</button>
             </section>
 
             <section class="budget">

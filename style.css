@@ -209,10 +209,10 @@ tr.done td:nth-child(5) {
     flex-wrap: wrap;
 }
 
-#expense-list {
+#expense-list li{
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wraap;
     gap: 8px;
 }
 
@@ -240,4 +240,8 @@ td button + button {
     width: 0%;
     background: #0f766e;
     transition: width 0.3s;
+}
+
+[hidden] {
+    display: none !important;
 }

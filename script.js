@@ -70,6 +70,11 @@ function hitungPengeluaranBulanIni() {
 
 function tampilkanPengeluaran() {
     expenseList.innerHTML = "";
+    let totalHariIni = 0;
+    for (const e of expenses) {
+        if (!e.archived && e.date === hariIni ()) totalHariIni += e.amount;
+    }
+    document.getElementById("expense-today").textContent = `Pengeluaran hari ini: ${formatRupiah(totalHariIni)}`;
     const urut = expenses.filter (e => !e.archived).sort ((a, b) => b.date.localeCompare(a.date));
     for (const e of urut) {
         const li = document.createElement("li");
@@ -413,6 +418,16 @@ document.getElementById("reset-expenses").addEventListener("click", function () 
     tampilkanPengeluaran();
     tampilkanBudget();
     tampilkanSaldo();
+});
+
+// ===== TOMBOL ADD + =====
+document.getElementById("toggle-expense").addEventListener("click", function () {
+    const form = document.getElementById("expense-form");
+    form.hidden = !form.hidden;
+    if (!form.hidden) {
+        document.getElementById("expense-date").value = hariIni();
+        document.getElementById("expensse-desc").focus();
+    }
 });
 
 tampilkanSemua();
