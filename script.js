@@ -453,46 +453,47 @@ document.getElementById("reset-expenses").addEventListener("click", function () 
 
 // ===== POP-UP TAMBAH DATA =====
 const modal = document.getElementById("modal");
-const pilihan = document.getElementById("pilihan");
 const panels = document.querySelectorAll(".panel");
 const modalJudul = document.getElementById("modal-title");
-const modalBack = document.getElementById("modal-back");
 
-function tampilkanPilihan() {
-    pilihan.hidden = false;
-    for (const p of panels) p.hidden = true;
-    modalJudul.textContent = "Mau Tambah Apa?";
-    modalBack.hidden = true;
-}
-
-function tampilkanPanel(id, judul) {
-    pilihan.hidden = true;
-    for(const p of panels) p.hidden = (p.id !== id);
+function bukaPanel(id, judul) {
+    for (const p of panels) p.hidden = (p.id !== id);
     modalJudul.textContent = judul;
-    modalBack.hidden = false;
-    if(id === "panel-expense") {
-        document.getElementById("expense-date").value = hariIni()
+    if (id === "panel-expense") {
+        document.getElementById("expense-date").value = hariIni();
     }
+    modal.showModal();
 }
 
 function tutupModal() {
     modal.close();
 }
 
-document.getElementById("fab").addEventListener("click", function () {
-    tampilkanPilihan();
-    modal.showModal();
-});
-
 document.getElementById("modal-close").addEventListener("click", tutupModal);
-modalBack.addEventListener("click", tampilkanPilihan);
 
-for (const tombol of pilihan.querySelectorAll("button")) {
-    tombol.addEventListener("click", function () {
-        tampilkanPanel(tombol.dataset.panel, "Tambah " + tombol.querySelector(".label").textContent);
-    });
+// ===== TOMBOL + (SPEED DIAL) =====
+const fabMenu = document.getElementById("fab-menu");
+const fabBackdrop = document.getElementById("fab-backdrop");
+
+function toggleFab(buka) {
+    fabMenu.classList.toggle("open", buka);
+    fabBackdrop.classList.toggle("open", buka);
 }
 
+document.getElementById("fab").addEventListener("click", function () {
+    toggleFab(!fabMenu.classList.contains("open"));
+});
+
+fabBackdrop.addEventListener("click", function () {
+    toggleFab(false);
+});
+
+for (const item of document.querySelectorAll(".fab-item")) {
+    item.addEventListener("click", function () {
+        toggleFab(false);
+        bukaPanel(item.dataset.panel, "Tambah " + item.querySelector(".label").textContent);
+    });
+}
 tampilkanSemua();
 
 if ("serviceWorker" in navigator) {
