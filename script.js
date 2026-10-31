@@ -458,7 +458,7 @@ const panels = document.getElementById(".panel");
 const modalJudul = document.getElementById("modal-title");
 const modalBack = document.getElementById("modal-back");
 
-fucntion tampilkanPilihan() {
+function tampilkanPilihan() {
     pilihan.hidden = false;
     for (const p of panels) p.hidden = true;
     modalJudul.textContent = "Mau Tambah Apa?";
@@ -476,10 +476,15 @@ function tampilkanPanel(id, judul) {
 }
 
 function tutupModal() {
-    modal.closest();
+    modal.close();
 }
 
-document.getElementById("fab").addEventListener("click", tutupModal);
+document.getElementById("fab").addEventListener("click", function () {
+    tampilkanPilihan();
+    modal.showModal();
+});
+
+document.getElementById("modal-close").addEventListener("click", tutupModal);
 modalBack.addEventListener("click", tampilkanPilihan);
 
 for (const tombol of pilihan.querySelectorAll("button")) {
