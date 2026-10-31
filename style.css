@@ -458,3 +458,131 @@ dialog::before {
     opacity: 1;
     pointer-events: auto;
 }
+
+/* ===== TEMA GELAP ===== */
+body {
+    background: #0d1211;
+    color: #e8efed;;
+}
+
+section {
+    background: #151c1b;
+    box-shadow: none;
+}
+
+.summary {
+    background: none;
+    padding: 0;
+    color: #e8efed;
+}
+
+.summary h2 {
+    color: #8fa09b;
+    opacity: 1;
+}
+
+input:not([type="checkbox"]),
+select {
+    background: #0d1211;
+    border-color: #232d2b;
+    color: #e8efed;
+}
+
+button {
+    background: #2dd4bf;
+    color: #0d1211;
+}
+
+button:hover {
+    background: #5eead4;
+}
+
+button.danger {
+    background: #f87171;
+    color: #0d1211;
+}
+
+button.danger:hover {
+    background: #fca5a5;
+}
+
+th {
+    color: #8fa09b;
+}
+
+th,
+td,
+#income-list li,
+#expense-list li {
+    border-bottom-color: #232d2b;
+}
+
+tr.done td {
+    color: #5b6b67;
+}
+
+.bar {
+    background: #232d2b;
+}
+
+#budget-bar {
+    background: #2dd4bf;
+}
+
+#budget-bar.warn {
+    background: #f59e0b;
+}
+
+#budget-bar.over {
+    background: #f87171;
+}
+
+.budget.over-card {
+    background: #2a1515;
+    border: 1px solid #f87171;
+}
+
+.budget.over-card #budget-info {
+
+    color: #fca5a5;
+}
+
+.empty {
+    color: #8fa09b;
+}
+
+dialog {
+    background: #151c1b;
+    color: #e8efed;
+}
+
+dialog::before {
+    background: #2a3735;
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.icon-btn {
+    background: #232d2b;
+    color: #e8efed;
+}
+
+.icon-btn:hover {
+    background: #2a3735;
+}
+
+.fab-item {
+    color: #e8efed;
+}
+
+.fab-item .label {
+    background: #151c1b;
+    color: #e8efed;
+    box-shadow: none;
+}
+
+#fab-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
