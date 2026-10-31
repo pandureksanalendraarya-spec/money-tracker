@@ -281,10 +281,10 @@ dialog {
     margin: auto auto 0;
     border: none;
     border-radius: 24px 24px 0 0;
-    padding: 12px 20px calc(24px + env(safe-arean-inset-bottom, 0px));
+    padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
-dialog [open] {
+dialog[open] {
     animation: naik 0.25s ease-out;
 }
 
@@ -305,7 +305,7 @@ dialog::before {
     height: 5px;
     margin: 0 auto 12px;
     border-radius: 3px;
-    background: #cdb5e1;
+    background: #cbd5e1;
 }
 
 /* ===== KEPALA POP-UP ===== */
@@ -359,7 +359,7 @@ dialog::before {
 .fab-menu {
     position: fixed;
     right: 20px;
-    bottom: calc(20px + env(safe-arean-inset-bottom, 0px));
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     width: 60px;
     height: 60px;
     z-index: 20;
@@ -418,14 +418,14 @@ dialog::before {
 }
 
 .fab-item .ikon {
-    width: 48ox;
+    width: 48px;
     height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.4rem;
-    box-shadow: 0 3px 8px rgba(0. 0, 0, 0.25);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
 .fab-item .label {
