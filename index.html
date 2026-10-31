@@ -13,11 +13,18 @@
     <body>
         <header>
         <h1>Money Tracker</h1>
-        <div class="aksi">
-            <button type="button" id="export-data">Export</button>
-            <button type="button" id="import-btn">Import</button>
-            <input type="file" id="import-data" hidden>
-            <button type="button" id="reset-all" class="danger">Reset Semua Data</button>
+        <div class="menu-wrap">
+            <button type="button" id="menu-btn" class="icon-btn" aria-label="Menu lainnya" aria-expanded="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>
+                </svg>
+            </button>
+            <div id="menu-pop" class="menu-pop" hidden>
+                <button type="button" id="export-data">Export data</button>
+                <button type="button" id="import-btn">Import data</button>
+                <input type="file" id="import-data" hidden>
+                <button type="button" id="reset-all" class="danger">Reset semua data></data></button>
+            </div>
         </div>
         </header>
 
