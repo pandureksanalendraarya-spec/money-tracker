@@ -383,7 +383,7 @@ dialog::before {
 }
 
 .fab-menu.open #fab {
-    transgorm: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .fab-item {
