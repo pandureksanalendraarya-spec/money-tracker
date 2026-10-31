@@ -380,28 +380,36 @@ location.reload();
 });
 
 // ===== EXPORT =====
-document.getElementById("export-data").addEventListener("click", function () {
-    const data = { incomes, goals, expenses, budget };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json" });
-    const file = new File([JSON.stringify(data, null, 2)], `money-tracker-${hariIni()}.json`, { type: "application/json"});
-    const fileTeks = new File([JSON.stringify(data, null, 2)], `money-tracker-${hariIni()}.json`, { type: "text/plain" });
-
-    const yangBisa = [file, fileTeks].find(f => navigator.canShare && navigator.canShare({ files: [f] }));
-    
-    if (yangBisa) {
-        navigator.share({ files: [yangBisa] }).catch(function (err) {
-            if (err.name !== "AbortError") alert("Share gagal: " + err.name);
-        });
-        return;
-    };
+function unduhFiles(teks, namaFile) {
+    const blob = new Blob([teks], {type: "applicaation/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `money-tracker-${hariIni()}.json`;
+    a.download = namaFile;
     a.click();
 
     URL.revokeObjectURL(url);
+}
+
+document.getElementById("export-data").addEventListener("click", function () {
+    const data = { incomes, goals, expenses, budget };
+    const teks = JSON.stringify(data, null, 2);
+    const namaFile = `money-tracker-${hariIni()}.json`;
+
+    const file = new File([teks], namaFile, { type: "application/json" });
+    const fileTeks = new File([teks], namaFile, { type: "text/plain" });
+    const yangBisa = [file, fileTeks].find(f => navigator.canShare && navigator.canShare({ files: [f] }));
+
+    if (!yangBisa) {
+        unduhFiles(teks, namaFile);
+        return;
+    }
+
+    navigator.share({ files: [yangBisa] }).catch(function (err) {
+        if (err.name === "AbortError") return;
+        unduhFiles(teks, namaFile);
+    });
 });
 
 // ===== IMPORT =====
@@ -494,6 +502,25 @@ for (const item of document.querySelectorAll(".fab-item")) {
         bukaPanel(item.dataset.panel, "Tambah " + item.querySelector(".label").textContent);
     });
 }
+
+// ===== MENU TITIK TIGA =====
+const menuBtn = document.getElementById("menu-btn");
+const menuPop = document.getElementById("menu-pop")
+
+function  toggleMenu(buka) {
+    menuPop.hidden = !buka;
+    menuBtn.setAttribute("aria-expanded", String(buka));
+}
+
+menuBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    toggleMenu(menuPop.hidden);
+});
+
+document.addEventListener("click", function () {
+    toggleMenu(false);
+});
+
 tampilkanSemua();
 
 if ("serviceWorker" in navigator) {
