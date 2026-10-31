@@ -362,7 +362,7 @@ document.getElementById("add-expense").addEventListener("click", function () {
 });
 
 // ===== BUDGET  =====
-document.getElementById("budget-target").value = budget > 0 ? budget : "";
+document.getElementById("budget-target").value = budget > 0 ? formatAngka(budget) : "";
 
 document.getElementById("save-budget").addEventListener("click", function () {
     const nilai = ambilAngka(document.getElementById("budget-target").value);
@@ -446,7 +446,7 @@ document.getElementById("import-data").addEventListener("change", function (even
             expenses.push(...data.expenses);
             budget = Number(data.budget) || 0;
 
-            document.getElementById("budget-target").value = budget > 0 ? budget : "";
+            document.getElementById("budget-target").value = budget > 0 ? formatAngka(budget) : "";
             simpanData();
             tampilkanSemua();
         } catch {
