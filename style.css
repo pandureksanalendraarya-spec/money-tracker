@@ -8,7 +8,7 @@ body {
     color: #1e293b;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 24px 16px 48px;
+    padding: 24px 16px 96px;
     line-height: 1.5;
 }
 
@@ -147,7 +147,7 @@ button.small {
     border-bottom: 1px solid #e2e8f0;
 }
 
-#incomee-list li:last-child,
+#income-list li:last-child,
 #expense-list li:last-child {
     border-bottom: none;
 }
@@ -212,7 +212,7 @@ tr.done td:nth-child(5) {
 #expense-list li{
     display: flex;
     align-items: center;
-    flex-wrap: wraap;
+    flex-wrap: wrap;
     gap: 8px;
 }
 
@@ -244,4 +244,77 @@ td button + button {
 
 [hidden] {
     display: none !important;
+}
+
+/* wajib: biar atribut hidden menang atas display:grid/flex */
+[hidden] {
+    display: none !important;
+}
+
+/* ===== LAYAR KOSONG ===== */
+.empty {
+    margin: 30vh 0 0;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+}
+
+.empty small {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+
+/* ===== TOMBOL + ===== */
+#fab {
+    position: fixed;
+    right: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    width: 60px;
+    height: 60px;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 2rem;
+    line-height: 1;
+    box-shadow: 0 4px 12px rgb(0, 0, 0, 0.25);
+}
+
+/* ===== POP-UP ===== */
+dialog {
+    width: min(92vw, 460px);
+    border: none;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+dialog::backdrop {
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.modal-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.modal-head h2 {
+    flex: 1;
+    margin: 0;
+}
+
+.pilihan {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.pilihan button {
+    margin: 0;
+    padding: 18px 10px;
 }
