@@ -270,19 +270,7 @@ td button + button {
 }
 
 /* ===== TOMBOL + ===== */
-#fab {
-    position: fixed;
-    right: 20px;
-    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-    width: 60px;
-    height: 60px;
-    margin: 0;
-    padding: 0;
-    border-radius: 50%;
-    font-size: 2rem;
-    line-height: 1;
-    box-shadow: 0 4px 12px rgb(0, 0, 0, 0.25);
-}
+
 
 /* ===== POP-UP ===== */
 dialog {
@@ -367,47 +355,106 @@ dialog::before {
     top: 0;
 }
 
-/* ===== PILIHAN IKON ===== */
-.pilihan {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px 8px;
-}
-
-.pilihan button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-    background: none;
-    color: #1e293b;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-,pilihan button:hover {
-    background: none;
-}
-
-.pilihan .ikon {
+/* ===== TOMBOL + (SPEED DIAL ===== */
+.fab-menu {
+    position: fixed;
+    right: 20px;
+    bottom: calc(20px + env(safe-arean-inset-bottom, 0px));
     width: 60px;
     height: 60px;
-    border-radius: 14px;
+    z-index: 20;
+}
+
+#fab {
+    position: relative;
+    z-index: 2;
+    width: 60px;
+    height: 60px;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 2rem;
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.9rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.1s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.25s;
 }
 
-.pilihan button:active .ikon {
-    transform: scale(0.92);
+.fab-menu.open #fab {
+    transgorm: rotate(45deg);
+}
+
+.fab-item {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    color: #1e293b;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0) scale(0.4);
+    transform-origin: right center;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.fab-item:hover {
+    background: none;
+}
+
+.fab-menu.open .fab-item {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(calc(-1 * (var(--i) * 60px + 70px))) scale(1);
+    transition-delay: calc(var(--i) * 40ms);
+}
+
+.fab-item .ikon {
+    width: 48ox;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 3px 8px rgba(0. 0, 0, 0.25);
+}
+
+.fab-item .label {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 [data-panel="panel-income"] .ikon  { background: linear-gradient(135deg, #34d399, #059669); }
 [data-panel="panel-goal"] .ikon    { background: linear-gradient(135deg, #fbbf24, #d97706); }
 [data-panel="panel-expense"] .ikon { background: linear-gradient(135deg, #fb7185, #e11d48); }
 [data-panel="panel-budget"] .ikon  { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+
+
+#fab-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(15, 23, 42, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+#fab-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
