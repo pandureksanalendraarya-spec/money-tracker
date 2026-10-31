@@ -68,34 +68,30 @@
             </section>
         </main>
 
-        <button type="button" id="fab" aria-label="Tambah data">+</button>
+        <div id="fab-backdrop"></div>
+
+        <div id="fab-menu" class="fab-menu">
+            <button type="button" class="fab-item" data-panel="panel-budget" style="--i: 3">
+                <span class="ikon">📊</span><span class="label">Budget</span>
+            </button>
+            <button type="button" class="fab-item" data-panel="panel-expense" style="--i: 2">
+                <span class="ikon">🛒</span><span class="label">Pengeluaran</span>
+            </button>
+            <button type="button" class="fab-item" data-panel="panel-goal" style="--i: 1">
+                <span class="ikon">🎯</span><span class="label">Goals</span>
+            </button>
+            <button type="button" class="fab-item" data-panel="pane;-income" style="--i: 0">
+                <span class="ikon">💰</span><span class="label">Pemasukan</span>
+            </button>
+            <button type="button" id="fab" aria-label="Tambah data">+</button>
+        </div>
 
         <dialog id="modal">
             <div class="modal-head">
-                <button type="button" id="modal-back" class="icon-btn" aria-label="Kembali" hidden>‹</button>
                 <h2 id="modal-title">Mau Tambah apa?</h2>
                 <button type="button" id="modal-close" class="icon-btn" aria-label="Tutup">✕</button>
             </div>
 
-            <div id="pilihan" class="pilihan">
-                <button type="button" data-panel="panel-income">
-                    <span class="ikon">💰</span>
-                    <span class="label">Pemasukan</span>
-                </button>
-                <button type="button" data-panel="panel-goal">
-                    <span class="ikon">🎯</span>
-                    <span class="label">Goals</span>
-                </button>
-                <button type="button" data-panel="panel-expense">
-                    <span class="ikon">🛒</span>
-                    <span class="label">Pengeluaran</span>
-                </button>
-                <button type="button" data-panel="panel-budget">
-                    <span class="ikon">📊</span>
-                    <span class="label">Budget</span>
-                </button>
-            </div>
-            
             <div id="panel-income" class="panel" hidden>
                 <form>
                     <label for="income-desc">Deskripsi</label>
