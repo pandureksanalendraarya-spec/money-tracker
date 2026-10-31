@@ -37,6 +37,14 @@ function hariIni() {
     return new Date().toLocaleDateString("sv-SE"); // format YYYY-MM-DD
 }
 
+function formatAngka(n) {
+    return n.toLocaleString("id-ID");
+}
+
+function ambilAngka(teks) {
+    return Number(teks.replace(/\D/g, ""));
+}
+
 // saldo = pemasukan - setoran goal - pengeluaran
 function hitungSaldo() {
     let total = 0;
@@ -266,7 +274,7 @@ document.getElementById("add-income").addEventListener("click", function () {
     const desc =document.getElementById("income-desc").value.trim();
     const category = document.getElementById("income-category").value.trim();
     const type = document.getElementById("income-type").value;
-    const amount = Number(document.getElementById("income-amount").value);
+    const amount = ambilAngka(document.getElementById("income-amount").value);
 
     if (desc === "" || amount <= 0) {
         alert("Isi deskripsi dan jumlah (harus lebih dari 0).");
@@ -287,8 +295,8 @@ document.getElementById("add-income").addEventListener("click", function () {
 // ===== GOAL =====
 document.getElementById("add-goal").addEventListener("click", function () {
     const name = document.getElementById("goal-name").value.trim();
-    const target = Number(document.getElementById("goal-target").value);
-    const setoran = Number(document.getElementById( "goal-amount").value);
+    const target = ambilAngka(document.getElementById("goal-target").value);
+    const setoran = ambilAngka(document.getElementById( "goal-amount").value);
 
     if (name === "" || setoran <= 0) {
         alert("Isi nama goal dan setoran (lebih dari 0).");
@@ -332,7 +340,7 @@ document.getElementById("expense-date").value = hariIni();
 document.getElementById("add-expense").addEventListener("click", function () {
     const date = document.getElementById("expense-date").value;
     const desc = document.getElementById("expense-desc").value.trim();
-    const amount = Number(document.getElementById("expense-amount").value);
+    const amount = ambilAngka(document.getElementById("expense-amount").value);
 
     if (date === "" || desc === "" || amount <= 0) {
         alert("Isi tanggal, deskripsi, dan jumlah(lebih dari 0).");
@@ -357,7 +365,7 @@ document.getElementById("add-expense").addEventListener("click", function () {
 document.getElementById("budget-target").value = budget > 0 ? budget : "";
 
 document.getElementById("save-budget").addEventListener("click", function () {
-    const nilai = Number(document.getElementById("budget-target").value);
+    const nilai = ambilAngka(document.getElementById("budget-target").value);
     if (nilai <= 0) {
         alert("Budget harus lebih dari 0.");
         return;
@@ -520,6 +528,14 @@ menuBtn.addEventListener("click", function (event) {
 document.addEventListener("click", function () {
     toggleMenu(false);
 });
+
+// ===== FORMAT NOMINAL OTOMATIS =====
+for (const input of document.querySelectorAll(".uang")) {
+    input.addEventListener("input", function () {
+        const angka = ambilAngka(input.value);
+        input.value = angka > 0 ? formatAngka(angka) : "";
+    });
+}
 
 tampilkanSemua();
 
