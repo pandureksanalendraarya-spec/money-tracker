@@ -12,65 +12,38 @@
     </head>
     <body>
         <header>
-            <h1>Money Tracker</h1>
-            <div class="aksi">
-                <button type="button" id="export-data">Export</button>
-                <button type="button" id="import-btn">Import</button>
-                <input type="file" id="import-data" hidden>
-                <button type="button" id="reset-all" class="danger">Reset Semua Data</button>
-            </div> 
-            
+        <h1>Money Tracker</h1>
+        <div class="aksi">
+            <button type="button" id="export-data">Export</button>
+            <button type="button" id="import-btn">Import</button>
+            <input type="file" id="import-data" hidden>
+            <button type="button" id="reset-all" class="danger">Reset Semua Data</button>
+        </div>
         </header>
 
-        <main class="grid">
+        <p id="empty-state" class="empty">
+            Buat Planning
+            <small>Tekan + untuk mulai</small>
+        </p>
+
+        <main class="grid" id="konten" hidden>
             <section class="summary">
                 <h2>Saldo</h2>
                 <p id="balance">Rp 0</p>
             </section>
 
-            <section class="income">
+            <section class="income" id="kartu-income" hidden>
                 <h2>Pemasukan</h2>
-                <form>
-                    <label for="income-desc">Deskripsi</label>
-                    <input type="text" id="income-desc" placeholder="Contoh: Monthly Pay">
-
-                    <label for="income-category">Kategori</label>
-                    <input type="text" id="income-category" placeholder="Contoh: Payroll">
-
-                    <label for="income-type">Tipe</label>
-                    <select id="income-type">
-                        <option value="income">Income</option>
-                        <option value="other">Lainnya</option>
-                    </select>
-
-                    <label for="income-amount">Jumlah (Rp)</label>
-                    <input type="number" id="income-amount" min="0">
-
-                    <button type="button" id="add-income">Simpan Pemasukan</button>
-                </form>
                 <ul id="income-list"></ul>
             </section>
 
-            <section>
-                <h2>Goals Nabung</h2>
-                <form>
-                    <label for="goal-name">Nama Goal</label>
-                    <input type="text" id="goal-name" placeholder="Contoh: Sepeda">
-                    
-                    <label for="goal-target">Target (Rp)</label>
-                    <input type="number" id="goal-target" min="0">
-
-                    <label for="goal-amount">Setoran (Rp)</label>
-                    <input type="number" id="goal-amount" min="0">
-
-                    <button type="button" id="add-goal">Setoran ke Goal</button>
-                </form>
-
+            <section id="kartu-goals" hidden>
+                <h2>Goals</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>Goal</th>
-                            <th>Target</th>
+                            <th>Goals</th>
+                            <th>Terget</th>
                             <th>Terkumpul</th>
                             <th>Progress</th>
                             <th>Kebeli</th>
@@ -81,39 +54,92 @@
                 </table>
             </section>
 
-            <section class="expense">
+            <section class="expense" id="kartu-expense" hidden>
                 <h2>Pengeluaran Harian</h2>
-                <button type="button" id="toggle-expense">Add +</button>
                 <p id="expense-today"></p>
-
-                <form id="expense-form" hidden>
-                    <label for="expense-date">Tanggal</label>
-                    <input type="date" id="expense-date">
-
-                    <label for="expense-desc">Pengeluaran Apa?</label>
-                    <input type="text" id="expense-desc">
-                    
-                    <label for="expense-amount">Jumlah (Rp)</label>
-                    <input type="number" id="expense-amount">
-
-                    <button type="button" id="add-expense">Simpan</button>
-                </form>
-
                 <ul id="expense-list"></ul>
-                <button type="button" id="reset-expenses" class="danger small">Reset Pengeluaran</button>
+                <button type="button" id="reset-expenses" class="danger small">Mulai Periode Baru</button>
             </section>
 
-            <section class="budget">
+            <section class="budget" id="kartu-budget" hidden>
                 <h2>Budget Bulanan</h2>
-                <form>
-                    <label for="budget-target">Target (Rp)</label>
-                    <input type="number" id="budget-target" min="0">
-
-                    <button type="button" id="save-budget">Simpan Budget</button>
-                </form>
                 <p id="budget-info"></p>
                 <div class="bar"><div id="budget-bar"></div></div>
             </section>
         </main>
+
+        <button type="button" id="fab" aria-label="Tambah data">+</button>
+
+        <dialog id="modal">
+            <div class="modal-head">
+            <button type="button" id="modal-back" class="small" hidden> <- </button>
+            <h2 id="modal-title">Mau tambah apa?</h2>
+            <button type="button" id="modal-close" class="small" aria-label="Tutup">X</button>
+            </div>
+
+            <div id="pilihan" class="pilihan">
+                <button type="button" data-panel="panel-income">Pemasukan</button>
+                <button type="button" data-panel="panel-goal">Goals</button>
+                <button type="button" data-panel="panel-expense">Pengeluaran</button>
+                <button type="button" data-panel="panel-budget">Budget</button>
+            </div>
+
+            <div id="panel-income" class="panel" hidden>
+                <form>
+                    <label for="income-desc">Deskripsi</label>
+                    <input type="text" id="income-desc">
+
+                    <label for="income-category">Kategori</label>
+                    <input type="text" id="income-category">
+
+                    <label for="income-type">Tipe</label>
+                    <select id="income-type">
+                        <option value="income">Income</option>
+                        <option value="other">Lainnya</option>
+                    </select>
+
+                    <button type="button" id="add-income">Simpan Pemasukan</button>
+                </form>
+            </div>
+
+            <div id="panel-goal" class="panel" hidden>
+                <form>
+                    <label for="goal-name">Nama Goal</label>
+                    <input type="text" id="goal-name">
+
+                    <label for="goal-target">Target (Rp)</label>
+                    <input type="number" id="goal-target">
+
+                    <label for="goal-amount">Setoran (Rp)</label>
+                    <input type="number" id="goal-amount">
+
+                    <button type="button" id="add-goal">Setoran ke Goal</button>
+                </form>
+            </div>
+
+            <div id="panel-expense" class="panel" hidden>
+                <form>
+                    <label for="expense-date">Tanggal</label>
+                    <input type="date" id="expense-date">
+
+                    <label for="expense-desc">Pengeluaran</label>
+                    <input type="text" id="expense-desc">
+
+                    <label for="expense-amount">Jumlah (Rp)</label>
+                    <input type="number" id="expnese-amount">
+
+                    <button type="button" id="add-expense">Simpan</button>
+                </form>
+            </div>
+
+            <div id="panel-budget" class="panel" hidden>
+                <form>
+                    <label for="budget-target">Target (Rp)</label>
+                    <input type="number" id="budget-target">
+
+                    <button type="button" id="save-budget">Simpan Budget</button>
+                </form>
+            </div>
+        </dialog>
     </body>
 </html>
