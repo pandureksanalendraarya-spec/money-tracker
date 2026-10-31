@@ -281,7 +281,7 @@ document.getElementById("add-income").addEventListener("click", function () {
     document.getElementById("income-desc").value = "";
     document.getElementById("income-category").value = "";
     document.getElementById("income-amount").value = "";
-    tutupModal;
+    tutupModal();
 });
 
 // ===== GOAL =====
@@ -323,7 +323,7 @@ document.getElementById("add-goal").addEventListener("click", function () {
     document.getElementById("goal-name").value = "";
     document.getElementById("goal-target").value = "";
     document.getElementById("goal-amount").value = "";
-    tutupModal;
+    tutupModal();
 });
 
 // ===== PENGELUARAN =====
@@ -350,7 +350,7 @@ document.getElementById("add-expense").addEventListener("click", function () {
 
     document.getElementById("expense-desc").value = "";
     document.getElementById("expense-amount").value = "";
-    tutupModal;
+    tutupModal();
 });
 
 // ===== BUDGET  =====
@@ -454,7 +454,7 @@ document.getElementById("reset-expenses").addEventListener("click", function () 
 // ===== POP-UP TAMBAH DATA =====
 const modal = document.getElementById("modal");
 const pilihan = document.getElementById("pilihan");
-const panels = document.getElementById(".panel");
+const panels = document.querySelectorAll(".panel");
 const modalJudul = document.getElementById("modal-title");
 const modalBack = document.getElementById("modal-back");
 
@@ -489,7 +489,7 @@ modalBack.addEventListener("click", tampilkanPilihan);
 
 for (const tombol of pilihan.querySelectorAll("button")) {
     tombol.addEventListener("click", function () {
-        tampilkanPanel(tombol.dataset.panel, "Tambah" + tombol.textContent);
+        tampilkanPanel(tombol.dataset.panel, "Tambah " + tombol.querySelector(".label").textContent);
     });
 }
 
