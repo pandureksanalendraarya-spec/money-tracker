@@ -45,9 +45,34 @@ function hitungSaldo() {
     for (const e of expenses) total -= e.amount;
     return total;
 }
+// tampilkan/sembunyikan kartu sesuai isi data
+function perbaruiLayar() {
+    const adaData = incomes.length > 0 || goals.length > 0 || expenses.length > 0 || budget > 0;
+    document.getElementById("empty-state").hidden = adaData;
+    document.getElementById("konten").hidden = !adaData;
+
+    document.getElementById("kartu-income").hidden = incomes.length === 0;
+    document.getElementById("kartu-goals").hidden = goals.length === 0;
+    document.getElementById("kartu-expense").hidden = expenses.length === 0;
+    document.getElementById("kartu-budget").hidden = budget <= 0;
+}
+
+// pengeluaran bulan lama otomatis disembunyikan (archived) saat masuk bulan baru
+function arsipkanBulanLama() {
+    const bulanIni = hariIni().slice(0, 7); 
+    let berubah = false;
+    for (const e of expenses) {
+        if (!e.archived && e.date.slice(0, 7) < bulanIni) {
+            e.archived = true;
+            berubah = true;
+        }
+    }
+    if (berubah) simpanData();
+}
 
 // ===== TAMPILAN =====//
 function tampilkanSaldo() {
+    perbaruiLayar();
     balanceEl.textContent = formatRupiah(hitungSaldo());
 }
 
@@ -124,6 +149,7 @@ function tampilkanPengeluaran() {
 }
 
 function tampilkanBudget() {
+    perbaruiLayar();
     const terpakai = hitungPengeluaranBulanIni();
     budgetBar.className = "";
     kartuBudget.classList.remove("over-card");
@@ -227,6 +253,7 @@ function tampilkanGoals() {
 }
 
 function tampilkanSemua() {
+    arsipkanBulanLama();
     tampilkanSaldo();
     tampilkanPemasukan();
     tampilkanGoals();
@@ -254,6 +281,7 @@ document.getElementById("add-income").addEventListener("click", function () {
     document.getElementById("income-desc").value = "";
     document.getElementById("income-category").value = "";
     document.getElementById("income-amount").value = "";
+    tutupModal;
 });
 
 // ===== GOAL =====
@@ -295,6 +323,7 @@ document.getElementById("add-goal").addEventListener("click", function () {
     document.getElementById("goal-name").value = "";
     document.getElementById("goal-target").value = "";
     document.getElementById("goal-amount").value = "";
+    tutupModal;
 });
 
 // ===== PENGELUARAN =====
@@ -321,6 +350,7 @@ document.getElementById("add-expense").addEventListener("click", function () {
 
     document.getElementById("expense-desc").value = "";
     document.getElementById("expense-amount").value = "";
+    tutupModal;
 });
 
 // ===== BUDGET  =====
@@ -335,6 +365,7 @@ document.getElementById("save-budget").addEventListener("click", function () {
     budget = nilai;
     simpanData();
     tampilkanBudget();
+    tutupModal();
 });
 
 // ===== RESET =====
@@ -420,15 +451,42 @@ document.getElementById("reset-expenses").addEventListener("click", function () 
     tampilkanSaldo();
 });
 
-// ===== TOMBOL ADD + =====
-document.getElementById("toggle-expense").addEventListener("click", function () {
-    const form = document.getElementById("expense-form");
-    form.hidden = !form.hidden;
-    if (!form.hidden) {
-        document.getElementById("expense-date").value = hariIni();
-        document.getElementById("expensse-desc").focus();
+// ===== POP-UP TAMBAH DATA =====
+const modal = document.getElementById("modal");
+const pilihan = document.getElementById("pilihan");
+const panels = document.getElementById(".panel");
+const modalJudul = document.getElementById("modal-title");
+const modalBack = document.getElementById("modal-back");
+
+fucntion tampilkanPilihan() {
+    pilihan.hidden = false;
+    for (const p of panels) p.hidden = true;
+    modalJudul.textContent = "Mau Tambah Apa?";
+    modalBack.hidden = true;
+}
+
+function tampilkanPanel(id, judul) {
+    pilihan.hidden = true;
+    for(const p of panels) p.hidden = (p.id !== id);
+    modalJudul.textContent = judul;
+    modalBack.hidden = false;
+    if(id === "panel-expense") {
+        document.getElementById("expense-date").value = hariIni()
     }
-});
+}
+
+function tutupModal() {
+    modal.closest();
+}
+
+document.getElementById("fab").addEventListener("click", tutupModal);
+modalBack.addEventListener("click", tampilkanPilihan);
+
+for (const tombol of pilihan.querySelectorAll("button")) {
+    tombol.addEventListener("click", function () {
+        tampilkanPanel(tombol.dataset.panel, "Tambah" + tombol.textContent);
+    });
+}
 
 tampilkanSemua();
 
