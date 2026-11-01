@@ -21,12 +21,12 @@ let budget = Number(localStorage.getItem("budget")) || 0;
 
 // ===== ELEMEN =====
 const balanceEl = document.getElementById("balance");
-const incomeList = document.getElementById("income-list");
 const goalList =  document.getElementById("goal-list");
-const expenseList = document.getElementById("expense-list");
 const budgetInfo = document.getElementById("budget-info");
 const budgetBar =  document.getElementById("budget-bar");
 const kartuBudget = document.querySelector(".budget");
+const terakhirList = document.getElementById("terakhir-list");
+const chartEl = document.getElementById("chart");
 
 // ===== FUNGSI BANTU =====
 function formatRupiah(angka) {
@@ -69,10 +69,10 @@ function perbaruiLayar() {
     document.getElementById("empty-state").hidden = adaData;
     document.getElementById("konten").hidden = !adaData;
 
-    document.getElementById("kartu-income").hidden = incomes.length === 0;
     document.getElementById("kartu-goals").hidden = goals.length === 0;
-    document.getElementById("kartu-expense").hidden = expenses.length === 0;
     document.getElementById("kartu-budget").hidden = budget <= 0;
+    document.getElementById("kartu-chart").hidden = expenses.length === 0;
+    document.getElementById("kartu-terakhir").hidden = incomes.length === 0 && expenses.length === 0;
 }
 
 // pengeluaran bulan lama otomatis disembunyikan (archived) saat masuk bulan baru
@@ -106,39 +106,6 @@ function tampilkanSaldo() {
     document.getElementById("stat-expense").textContent = "- " + formatAngka(hitungPengeluaranBulanIni());
 }
 
-function tampilkanPemasukan() {
-    incomeList.innerHTML =  "";
-    const urut = [...incomes].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
-    for (const item of urut) {
-        const li = document.createElement("li");
-
-        const kategori = item.category ? ` (${item.category})` : "";
-        const tipe = item.type === "other" ? " [Lainnya]" : "";
-        const tanggal = item.date ? `${item.date} | ` : "";
-        const teks = document.createElement("span");
-        teks.textContent = `${tanggal}${item.desc}${kategori}${tipe} - ${formatRupiah(item.amount)}`;
-
-        const btnHapus = document.createElement("button");
-        btnHapus.type = "button";
-        btnHapus.textContent = "Hapus";
-        btnHapus.className = "small danger";
-        btnHapus.addEventListener("click", function () {
-            if (hitungSaldo() - item.amount < 0) {
-                alert("Pemasukan ini nggak bisa dihapus, saldo jadi minus.");
-                return;
-            }
-            if (!confirm(`Hapus "${item.desc}"?`)) return;
-            incomes.splice(incomes.indexOf(item), 1);
-            simpanData();
-            tampilkanPemasukan();
-            tampilkanSaldo();
-        });
-
-        li.append(teks, btnHapus);
-        incomeList.appendChild(li);
-    }
-}
-
 function hitungPengeluaranBulanIni() {
     let total = 0;
     for (const e of expenses) {
@@ -147,56 +114,77 @@ function hitungPengeluaranBulanIni() {
     return total;
 }
 
-function tampilkanPengeluaran() {
-    expenseList.innerHTML = "";
-    let totalHariIni = 0;
-    for (const e of expenses) {
-        if (!e.archived && e.date === hariIni ()) totalHariIni += e.amount;
-    }
-    document.getElementById("expense-today").textContent = `Pengeluaran hari ini: ${formatRupiah(totalHariIni)}`;
-    const urut = expenses.filter (e => !e.archived).sort ((a, b) => b.date.localeCompare(a.date));
-    for (const e of urut) {
+function tampilkanTransaksi() {
+    tampilkanTerakhir();
+    tampilkanGrafik();
+}
+
+function tampilkanTerakhir() {
+    terakhirList.innerHTML = "";
+    const semua = [
+        ...[...incomes].reverse().map(item => ({ jenis: "income", item })),
+        ...[...expenses].reverse().filter(e => !e.archived).map(item => ({ jenis: "expense", item}))
+    ];
+    semua.sort((a, b) => (b.item.date || "").localeCompare(a.item.date ||  ""));
+
+    for (const t of semua.slice(0, 10)) {
         const li = document.createElement("li");
 
-        const teks = document.createElement("span");
-        teks.textContent = `${e.date} | ${e.desc} - ${formatRupiah(e.amount)}`;
+        const nama = document.createElement("span");
+        nama.textContent  = t.item.desc;
 
-        const btnEdit = document.createElement("button");
-        btnEdit.type = "button";
-        btnEdit.textContent = "Edit";
-        btnEdit.className = "small";
-        btnEdit.addEventListener("click", function () {
-            mintaNominal("Edit Pengeluaran", "Nominal baru (Rp)", e.amount, function (baru) {
-                if (hitungSaldo() + e.amount - baru < 0) {
-                    alert("Saldo jadi minus, nominal terlalu besar.");
-                    return false;
-                }
-                e.amount = baru;
-                simpanData();
-                tampilkanPengeluaran();
-                tampilkanBudget();
-                tampilkanSaldo();
-            });
+        const jumlah = document.createElement("strong");
+        if (t.jenis === "income") {
+            jumlah.textContent = "+ " + formatRupiah(t.item.amount);
+        }
+
+        li.append(nama, jumlah);
+        li.addEventListener("click", function () {
+            bukaAksiTransaksi(t);
         });
-        
-            
-
-            const btnHapus = document.createElement("button");
-            btnHapus.type = "button";
-            btnHapus.textContent = "Hapus";
-            btnHapus.className = "small danger";
-            btnHapus.addEventListener("click", function () {
-                if (!confirm(`Hapus "${e.desc}"?`)) return;
-                expenses.splice(expenses.indexOf(e), 1);
-                simpanData();
-                tampilkanPengeluaran();
-                tampilkanBudget();
-                tampilkanSaldo();
-            });
-
-            li.append(teks, btnEdit, btnHapus);
-            expenseList.appendChild(li);
+        terakhirList.appendChild(li);
     }
+}
+
+function tampilkanGrafik() {
+    chartEl.innerHTML = "";
+    const namaHari = ["M", "S", "S", "R", "K", "J", "S"];
+
+    const hari = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        hari.push(d);
+    }
+
+    const total = hari.map(function (d) {
+        const tgl = d.toLocaleDateString("sv-SE");
+        let t = 0;
+        for (const e of expenses) {
+            if (e.date === tgl) t += e.amount;
+        }
+        return t;
+    });
+    const maks = Math.max(...total, 1);
+
+    hari.forEach(function (d, i) {
+        const kolom = document.createElement("div");
+        kolom.className = i === 6 ? "kolom hari-ini" : "kolom";
+
+        const area = document.createElement("div");
+        area.className = "area";
+        const batang = document.createElement("div");
+        batang.className = "batang";
+        batang.style.height = Math.max(10, Math.round((total[i] / maks) * 10)) + "%";
+        batang.title = formatRupiah(total[i]);
+        area.appendChild(batang);
+
+        const label = document.createElement("span");
+        label.textContent = namaHari[d.getDay()];
+
+        kolom.append(area, label);
+        chartEl.appendChild(kolom);
+    });
 }
 
 function tampilkanBudget() {
@@ -259,9 +247,9 @@ function tampilkanGoals() {
 function tampilkanSemua() {
     arsipkanBulanLama();
     tampilkanSaldo();
-    tampilkanPemasukan();
+    tampilkanTransaksi();
     tampilkanGoals();
-    tampilkanPengeluaran();
+    tampilkanTransaksi();
     tampilkanBudget();
 }
 
@@ -280,7 +268,7 @@ document.getElementById("add-income").addEventListener("click", function () {
 
     incomes.push({ desc, category, type, amount, date });
     simpanData();
-    tampilkanPemasukan();
+    tampilkanTransaksi();
     tampilkanSaldo();
 
     document.getElementById("income-desc").value = "";
@@ -349,7 +337,7 @@ document.getElementById("add-expense").addEventListener("click", function () {
     }
     expenses.push({ date, desc, amount, archived: false });
     simpanData();
-    tampilkanPengeluaran();
+    tampilkanTransaksi();
     tampilkanBudget();
     tampilkanSaldo();
 
@@ -454,12 +442,12 @@ document.getElementById("import-data").addEventListener("change", function (even
     event.target.value = "";
 });
 
-// ===== RESET PENGELUARAN =====
-document.getElementById("reset-expenses").addEventListener("click", function () {
-    if (!confirm("Mulai periode baru? Pengeluaran  lama disembunyikan, saldo tetap.")) return;
+// ===== PERIODE BARU =====
+document.getElementById("periode-baru").addEventListener("click", function () {
+    if (!confirm("Mulai periode baru? Pengeluaran lama disembunyikan, saldo tetap.")) return;
     for (const e of expenses) e.archived = true;
     simpanData();
-    tampilkanPengeluaran();
+    tampilkanTransaksi();
     tampilkanBudget();
     tampilkanSaldo();
 });
@@ -550,6 +538,48 @@ document.getElementById("aksi-hapus").addEventListener("click", function () {
     goals.splice(goals.indexOf(goalAktif), 1);
     simpanData();
     tampilkanGoals();
+    tampilkanSaldo();
+    tutupModal();
+});
+
+// ===== AKSI TRANSAKSI (ketuk baris di "Terakhir") =====
+let transaksiAktif = null;
+
+function bukaAksiTransaksi(t) {
+    transaksiAktif = t;
+    document.getElementById("transaksi-info").textContent =
+    `${t.item.date || "Tanpa tanggal"} · ${formatRupiah(t.item.amount)}`;
+    bukaPanel("panel-transaksi-aksi", t.item.desc);
+}
+
+document.getElementById("transaksi-edit").addEventListener("click", function () {
+    const t = transaksiAktif;
+    mintaNominal(`Edit ${t.item.desc}`, "Nominal baru (Rp)", t.item.amount, function (baru) {
+        const selisih = t.jenis === "income" ? baru = t.item.amount : t.item.amount - baru;
+        if (hitungSaldo() + selisih < 0) {
+            alert("Saldo jadi minus, nominal tidak bisa diubah ke angka ini.");
+            return false;
+        }
+        t.item.amount = baru;
+        simpanData();
+        tampilkanTransaksi();
+        tampilkanBudget();
+        tampilkanSaldo();
+    });
+});
+
+document.getElementById("transaksi-hapus").addEventListener("click", function () {
+    const t = transaksiAktif;
+    if (t.jenis === "income" && hitungSaldo() - t.item.amount < 0) {
+        alert("Pemasukan ini nggak bisa dihapus, saldo jadi minus.");
+        return;
+    }
+    if (!confirm(`Hapus "${t.item.desc}"?`)) return;
+    const daftar = t.jenis === "income" ? incomes : expenses;
+    daftar.splice(daftar.indexOf(t.item), 1);
+    simpanData();
+    tampilkanTransaksi();
+    tampilkanBudget();
     tampilkanSaldo();
     tutupModal();
 });

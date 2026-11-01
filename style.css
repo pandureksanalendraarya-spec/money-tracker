@@ -772,3 +772,96 @@ button.sekunder {
 button.sekunder:hover {
     background: #2a3735;
 }
+
+/* ===== LAYOUT SATU KOLOM ===== */
+body {
+    max-width: 480px;
+}
+
+.grid {
+    grid-template-columns: 1fr;
+}
+
+/* ===== GRAFIK 7 HARI ===== */
+#kartu-chart h2 {
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+
+.chart {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.kolom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.area {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 80px;
+}
+
+.batang {
+    width: 100%;
+    border-radius: 8px;
+    background: #2a3735;
+}
+
+.kolom span {
+    font-size: 0.75rem;
+    color: #8fa09b;
+}
+
+.kolom.hari-ini .batang {
+    background: #2dd4bf;
+}
+
+.kolom.hari-ini span {
+    color: #2dd4bf;
+}
+
+/* ===== DAFTAR TERAKHIR ===== */
+#kartu-terkahir {
+    padding: 0;
+    background: none;
+}
+
+#kartu-terkahir h2 {
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+#terkahir-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#terkahir-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #232d2b;
+    cursor: pointer; 
+}
+
+#terkahir-list li:last-child {
+    border-bottom: none;
+}
+
+#terakhir-list strong {
+    white-space: nowrap;
+}
+
+#terakhir-list .plus {
+    color: #2dd4bf;
+}
