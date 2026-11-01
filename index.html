@@ -13,6 +13,7 @@
     <body>
         <header>
         <div>
+            <p class="sapaan" id="sapaan"></p>
             <p class="saldo-label" id="saldo-label">Saldo</p>
             <p id="balance">Rp 0</p>
         </div>
@@ -24,7 +25,7 @@
             </button>
             <div id="menu-pop" class="menu-pop" hidden>
                 <button type="button" id="export-data">
-                    <svg width="18" height="18" viweBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>
                     Export data
                 </button>
                 <button type="button" id="import-btn">
@@ -32,6 +33,7 @@
                     Import data
                 </button>
                 <input type="file" id="import-data" hidden>
+                <button type="button" id="hapus-contoh">Hapus data contoh</button>
                 <button type="button" id="periode-baru">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6M20 10a8 8 0 0 0-14-3M4 14a8 8 0 0 0 14 3"/></svg>
                     Mulai periode baru
@@ -44,12 +46,34 @@
         </div>
         </header>
 
-        <p id="empty-state" class="empty">
-            Buat Planning
-            <small>Tekan + untuk mulai</small>
-        </p>
+        <div id="empty-state" class="kosong">
+            <h2>Yuk mulai catat</h2>
+            <p>Pilih satu langkah kecil. Sisanya muncul sendiri begitu ada data.</p>
+            <button type="button" class="ajak" data-panel="panel-income" data-judul="Tambah Pemasukan">
+    <span class="ikon-bulat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    </span>
+    <span class="teks"><strong>Catat pemasukan pertama</strong><small>Gaji, uang saku, atau freelance</small></span>
+</button>
+
+<button type="button" class="ajak" data-panel="panel-budget" data-judul="Tambah Budget">
+    <span class="ikon-bulat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+    </span>
+    <span class="teks"><strong>Atur budget bulanan</strong><small>Batas jajan biar saldo aman</small></span>
+</button>
+
+<button type="button" class="ajak" data-panel="panel-goal" data-judul="Tambah Goals">
+    <span class="ikon-bulat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+    </span>
+    <span class="teks"><strong>Bikin goal pertama</strong><small>Sepeda, kamera, liburan</small></span>
+</button>
+<button type="button" id="contoh-kosong" class="outline">Coba dengan data contoh</button>
+        </div>
 
         <main class="grid" id="konten" hidden>
+            <div id="insight" class="insight" hidden></div>
             <div class="stats">
                 <div>
                     <small>Pemasukan</small>
@@ -74,6 +98,12 @@
                 <div id="chart" class="chart"></div>
             </section>
 
+            <section id="kartu-kategori" hidden>
+    <h2>Per kategori</h2>
+    <div id="kategori-bar" class="kat-bar"></div>
+    <ul id="kategori-list"></ul>
+</section>
+
             <section id="kartu-goals" hidden>
                 <ul id="goal-list"></ul>
             </section>
@@ -88,18 +118,20 @@
 
         <div id="fab-menu" class="fab-menu">
             <button type="button" class="fab-item" data-panel="panel-budget" style="--i: 3">
-                <span class="ikon">📊</span><span class="label">Budget</span>
-            </button>
-            <button type="button" class="fab-item" data-panel="panel-expense" style="--i: 2">
-                <span class="ikon">🛒</span><span class="label">Pengeluaran</span>
-            </button>
-            <button type="button" class="fab-item" data-panel="panel-goal" style="--i: 1">
-                <span class="ikon">🎯</span><span class="label">Goals</span>
-            </button>
-            <button type="button" class="fab-item" data-panel="panel-income" style="--i: 0">
-                <span class="ikon">💰</span><span class="label">Pemasukan</span>
-            </button>
-            <button type="button" id="fab" aria-label="Tambah data">+</button>
+    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span><span class="label">Budget</span>
+</button>
+<button type="button" class="fab-item" data-panel="panel-expense" style="--i: 2">
+    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="label">Pengeluaran</span>
+</button>
+<button type="button" class="fab-item" data-panel="panel-goal" style="--i: 1">
+    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></span><span class="label">Goals</span>
+</button>
+<button type="button" class="fab-item" data-panel="panel-income" style="--i: 0">
+    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span><span class="label">Pemasukan</span>
+</button>
+            <button type="button" id="fab" aria-label="Tambah data">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+</button>
         </div>
 
         <dialog id="modal">
@@ -156,6 +188,15 @@
 
                     <label for="expense-desc">Pengeluaran</label>
                     <input type="text" id="expense-desc">
+
+                    <label>Kategori</label>
+<div class="pilih-kat">
+    <button type="button" data-kat="makan" class="aktif">Makan</button>
+    <button type="button" data-kat="transport">Transport</button>
+    <button type="button" data-kat="belanja">Belanja</button>
+    <button type="button" data-kat="lainnya">Lainnya</button>
+</div>
+<input type="hidden" id="expense-category" value="makan">
 
                     <label for="expense-amount">Jumlah (Rp)</label>
                     <input type="text" inputmode="numeric" class="uang" id="expense-amount">

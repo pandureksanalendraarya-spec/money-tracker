@@ -1,19 +1,37 @@
-const CACHE = "money-tracker-v6";
-const FILES = ["./", "./index.html", "./script.js", "./style.css"];
+const CACHE = "money-tracker-v10";
+const FILES = ["./", "./index.html", "./script.js", "./style.css", "manifest.json", "icon-192.png"];
 
-self.addEventListener("install", e => {
-    self.skipWaiting();
-    e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
-});
-
-self.addEventListener("activate", e => {
-    e.waitUntil(
-        caches.keys().then(keys =>
-            Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-        )
+self.addEventListener("install", function (event) {
+    event.waitUntil(
+        caches.open(CACHE).then(function (cache) {
+            return cache.addAll(FILES);
+        })
     );
+    self.skipWaiting();
 });
 
-self.addEventListener("fetch", e => {
-    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+self.addEventListener("activate", function (event) {
+    event.waitUntil(
+        caches.keys().then(function (names) {
+            return Promise.all(
+                names.filter(n => n !== CACHE).map(n => caches.delete(n))
+            );
+        })
+    );
+    self.clients.claim();
+});
+
+self.addEventListener("fetch", function (event) {
+    if (event.request.method !== "GET") return;
+    event.respondWith(
+        fetch(event.request)
+        .then(function (res) {
+            const salinan = res.clone();
+            caches.open(CACHE).then(c => c.put(event.request, salinan));
+            return res;
+        })
+        .catch(function () {
+            return caches.match(event.request);
+        })
+    );
 });

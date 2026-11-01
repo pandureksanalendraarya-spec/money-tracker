@@ -55,6 +55,18 @@ function formatSingkat(n) {
     return String(n);
 }
 
+const KATEGORI = {
+    makan:     { nama: "Makan",     warna: "#2dd4bf", ikon: "M6 3v8a3 3 0 0 0 6 0V3M9 3v18M18 3c-2 2-3 5-3 8h3v10" },
+    transport: { nama: "Transport", warna: "#60a5fa", ikon: "M5 16l1.5-5h11L19 16M5 16v3M19 16v3M5 16h14" },
+    belanja:   { nama: "Belanja",   warna: "#fbbf24", ikon: "M6 7h12l-1 13H7L6 7zM9 7a3 3 0 0 1 6 0" },
+    lainnya:   { nama: "Lainnya",   warna: "#8fa09b", ikon: "M5 12h.01M12 12h.01M19 12h.01" }
+};
+const IKON_INCOME = "M12 5v14M6 13l6 6 6-6";
+
+function kategoriDari(e) {
+    return KATEGORI[e.category] ? e.category : "lainnya";
+}
+
 // saldo = pemasukan - setoran goal - pengeluaran
 function hitungSaldo() {
     let total = 0;
@@ -88,6 +100,42 @@ function arsipkanBulanLama() {
     if (berubah) simpanData();
 }
 
+function tampilkanSapaan() {
+    const jam = new Date().getHours();
+    let sapa = "Selamat Malam";
+    if (jam < 11) sapa = "Selamat Pagi";
+    else if (jam < 15) sapa = "Selamat Siang";
+    else if (jam < 18) sapa = "Selamat Sore";
+    document.getElementById("sapaan").textContent = sapa;
+}
+
+function tampilkanInsight() {
+    const el = document.getElementById("insight");
+    const adaPengeluaran = expenses.some(e => !e.archived);
+    el.hidden = !adaPengeluaran;
+    if (!adaPengeluaran) return;
+
+    const sekarang = new Date();
+    const hariKe = sekarang.getDate();
+    const jumlahHari = new Date(sekarang.getFullYear(), sekarang.getMonth() + 1, 0).getDate();
+    const terpakai = hitungPengeluaranBulanIni();
+    const rata = Math.round(terpakai / hariKe);
+
+    let teks = `Rata-rata jajan Rp ${formatSingkat(rata)} per hari.`;
+    if (budget > 0) {
+        const sisa = budget - terpakai;
+        if (sisa < 0) {
+            teks += " Budget bulan ini sudah terlewati.";
+        } else if (rata > 0) {
+            const tanggalHabis = hariKe + Math.floor(sisa / rata);
+            teks += tanggalHabis >= jumlahHari
+            ? " Budget cukup sampai akhir bulan."
+            : ` Dengan ritme ini budget cukup sampai tanggal ${tanggalHabis}.`;
+        }
+    }
+    el.textContent = teks;
+}
+
 // ===== TAMPILAN =====//
 function tampilkanSaldo() {
     perbaruiLayar();
@@ -104,6 +152,9 @@ function tampilkanSaldo() {
 
     document.getElementById("stat-income").textContent = "+ " + formatAngka(totalIncome);
     document.getElementById("stat-expense").textContent = "- " + formatAngka(hitungPengeluaranBulanIni());
+    
+    tampilkanSapaan();
+    tampilkanInsight();
 }
 
 function hitungPengeluaranBulanIni() {
@@ -117,28 +168,64 @@ function hitungPengeluaranBulanIni() {
 function tampilkanTransaksi() {
     tampilkanTerakhir();
     tampilkanGrafik();
+    tampilkanKategori();
+}
+
+function labelTanggal(tgl) {
+    if (!tgl) return "Tanpa tanggal";
+    if (tgl === hariIni()) return "Hari ini";
+    if (tgl === tanggalMundur(1)) return "Kemarin";
+    if (tgl >= tanggalMundur(7)) return "Minggu ini";
+    return "Lebih lama";
 }
 
 function tampilkanTerakhir() {
     terakhirList.innerHTML = "";
     const semua = [
         ...[...incomes].reverse().map(item => ({ jenis: "income", item })),
-        ...[...expenses].reverse().filter(e => !e.archived).map(item => ({ jenis: "expense", item}))
+        ...[...expenses].reverse().filter(e => !e.archived).map(item => ({ jenis: "expense", item }))
     ];
-    semua.sort((a, b) => (b.item.date || "").localeCompare(a.item.date ||  ""));
+    semua.sort((a, b) => (b.item.date || "").localeCompare(a.item.date || ""));
 
+    let grupSebelumnya = "";
     for (const t of semua.slice(0, 10)) {
+        const grup = labelTanggal(t.item.date);
+        if (grup !== grupSebelumnya) {
+            const judul = document.createElement("li");
+            judul.className = "grup";
+            judul.textContent = grup;
+            terakhirList.appendChild(judul);
+            grupSebelumnya = grup;
+        }
+
+        const kat = t.jenis === "expense" ? KATEGORI[kategoriDari(t.item)] : null;
+        const warna = kat ? kat.warna : "#2dd4bf";
+        const path = kat ? kat.ikon : IKON_INCOME;
+
         const li = document.createElement("li");
 
+        const ikon = document.createElement("span");
+        ikon.className = "ikon-tx";
+        ikon.style.color = warna;
+        ikon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
+
+        const teks = document.createElement("span");
+        teks.className = "teks";
         const nama = document.createElement("span");
-        nama.textContent  = t.item.desc;
+        nama.textContent = t.item.desc;
+        const sub = document.createElement("small");
+        sub.textContent = kat ? kat.nama : "Pemasukan";
+        teks.append(nama, sub);
 
         const jumlah = document.createElement("strong");
         if (t.jenis === "income") {
             jumlah.textContent = "+ " + formatRupiah(t.item.amount);
+            jumlah.className = "plus";
+        } else {
+            jumlah.textContent = formatRupiah(t.item.amount);
         }
 
-        li.append(nama, jumlah);
+        li.append(ikon, teks, jumlah);
         li.addEventListener("click", function () {
             bukaAksiTransaksi(t);
         });
@@ -175,7 +262,7 @@ function tampilkanGrafik() {
         area.className = "area";
         const batang = document.createElement("div");
         batang.className = "batang";
-        batang.style.height = Math.max(10, Math.round((total[i] / maks) * 10)) + "%";
+        batang.style.height = Math.max(10, Math.round((total[i] / maks) * 100)) + "%";
         batang.title = formatRupiah(total[i]);
         area.appendChild(batang);
 
@@ -185,6 +272,51 @@ function tampilkanGrafik() {
         kolom.append(area, label);
         chartEl.appendChild(kolom);
     });
+}
+
+function tampilkanKategori() {
+    const kartu = document.getElementById("kartu-kategori");
+    const bar = document.getElementById("kategori-bar");
+    const daftar = document.getElementById("kategori-list");
+    bar.innerHTML = "";
+    daftar.innerHTML = "";
+
+    const total = {};
+    let semua = 0;
+    for (const e of expenses) {
+        if (e.archived) continue;
+        const k = kategoriDari(e);
+        total[k] = (total[k] || 0) + e.amount;
+        semua += e.amount;
+    }
+
+    kartu.hidden = semua === 0;
+    if (semua === 0) return;
+
+    const urut = Object.keys(total).sort((a, b) => total[b] - total[a]);
+    for (const k of urut) {
+        const persen = Math.round((total[k] / semua) * 100);
+
+        const potong = document.createElement("div");
+        potong.style.width = (total[k] / semua) * 100 + "%";
+        potong.style.background = KATEGORI[k].warna;
+        bar.appendChild(potong);
+
+        const li = document.createElement("li");
+        const titik = document.createElement("span");
+        titik.className = "titik";
+        titik.style.background = KATEGORI[k].warna;
+        const nama = document.createElement("span");
+        nama.className = "nama";
+        nama.textContent = KATEGORI[k].nama;
+        const pct = document.createElement("span");
+        pct.className = "pct";
+        pct.textContent = persen + "%";
+        const jumlah = document.createElement("strong");
+        jumlah.textContent = "Rp " + formatSingkat(total[k]);
+        li.append(titik, nama, pct, jumlah);
+        daftar.appendChild(li);
+    }
 }
 
 function tampilkanBudget() {
@@ -212,6 +344,20 @@ function tampilkanBudget() {
     }
 }
 
+function estimasiGoal(goal) {
+    if (goal.done) return "";
+    if (goal.current >= goal.target) return "Target tercapai";
+    if (!goal.mulai) return "";
+
+    const hari = (Date.now() - new Date(goal.mulai).getTime()) / 86400000;
+    const bulan = Math.max(1, hari / 30);
+    const ritme = goal.current / bulan;
+    if (ritme <= 0) return "";
+
+    const sisaBulan = Math.ceil((goal.target - goal.current) / ritme);
+    return `Sekitar ${sisaBulan} bulan lagi kalau ritme setor sama`;
+}
+
 function tampilkanGoals() {
     goalList.innerHTML = "";
     for (const goal of goals) {
@@ -234,7 +380,10 @@ function tampilkanGoals() {
         isi.style.width = persen + "%";
         bar.appendChild(isi);
 
-        li.append(atas, bar);
+        const eta = document.createElement("p");
+        eta.className = "goal-eta";
+        eta.textContent = estimasiGoal(goal);
+        li.append(atas, bar, eta);
         li.addEventListener("click", function () {
             bukaAksiGoal(goal);
         });
@@ -249,7 +398,6 @@ function tampilkanSemua() {
     tampilkanSaldo();
     tampilkanTransaksi();
     tampilkanGoals();
-    tampilkanTransaksi();
     tampilkanBudget();
 }
 
@@ -304,7 +452,7 @@ document.getElementById("add-goal").addEventListener("click", function () {
             alert("Goal baru butuh target (lebih dari 0).");
             return;
         }
-        goals.push({ name, target, current: setoran, done: false });
+        goals.push({ name, target, current: setoran, done: false, mulai: hariIni() });
     }
 
     simpanData();
@@ -333,7 +481,8 @@ document.getElementById("add-expense").addEventListener("click", function () {
         alert("Saldo tidak cukup.");
         return;
     }
-    expenses.push({ date, desc, amount, archived: false });
+    const category = document.getElementById("expense-category").value;
+    expenses.push({ date, desc, amount, category, archived: false });
     simpanData();
     tampilkanTransaksi();
     tampilkanBudget();
@@ -354,6 +503,7 @@ document.getElementById("save-budget").addEventListener("click", function () {
         return;
     }
     budget = nilai;
+    localStorage.removeItem("budgetContoh");
     simpanData();
     tampilkanBudget();
     tutupModal();
@@ -367,6 +517,7 @@ localStorage.removeItem("incomes");
 localStorage.removeItem("goals");
 localStorage.removeItem("expenses");
 localStorage.removeItem("budget");
+localStorage.removeItem("budgetContoh");
 location.reload();
 });
 
@@ -468,11 +619,25 @@ for (const b of document.querySelectorAll(".segmen button")) {
     });
 }
 
+function setKategori(nilai) {
+    document.getElementById("expense-category").value = nilai;
+    for (const b of document.querySelectorAll(".pilih-kat button")) {
+        b.classList.toggle("aktif", b.dataset.kat === nilai);
+    }
+}
+
+for (const b of document.querySelectorAll(".pilih-kat button")) {
+    b.addEventListener("click", function () {
+        setKategori(b.dataset.kat);
+    });
+}
+
 function bukaPanel(id, judul) {
     for (const p of panels) p.hidden = (p.id !== id);
     modalJudul.textContent = judul;
     if (id === "panel-expense") {
         document.getElementById("expense-date").value = hariIni();
+        setKategori("makan");
     }
     if (id === "panel-income") {
         document.getElementById("income-date").value = hariIni();
@@ -567,7 +732,7 @@ function bukaAksiTransaksi(t) {
 document.getElementById("transaksi-edit").addEventListener("click", function () {
     const t = transaksiAktif;
     mintaNominal(`Edit ${t.item.desc}`, "Nominal baru (Rp)", t.item.amount, function (baru) {
-        const selisih = t.jenis === "income" ? baru = t.item.amount : t.item.amount - baru;
+        const selisih = t.jenis === "income" ? baru - t.item.amount : t.item.amount - baru;
         if (hitungSaldo() + selisih < 0) {
             alert("Saldo jadi minus, nominal tidak bisa diubah ke angka ini.");
             return false;
@@ -645,6 +810,77 @@ for (const input of document.querySelectorAll(".uang")) {
         input.value = angka > 0 ? formatAngka(angka) : "";
     });
 }
+
+// ===== LAYAR KOSONG =====
+for (const b of document.querySelectorAll(".ajak")) {
+    b.addEventListener("click", function () {
+        bukaPanel(b.dataset.panel, b.dataset.judul);
+    });
+}
+
+// ===== DATA CONTOH =====
+function tanggalMundur(n) {
+    const d = new Date();
+    d.setDate(d.getDate() - n);
+    return d.toLocaleDateString("sv-SE");
+}
+
+function isiDataContoh() {
+    incomes.push(
+        { desc: "Gaji bulanan", type: "income", amount:3800000, date: hariIni(), contoh: true },
+        { desc: "Proyek freelance", type: "income", amount: 750000, date: hariIni(), contoh: true }
+    );
+    goals.push(
+        { name: "Sepeda", target: 5500000, current: 700000, done: false, mulai: tanggalMundur(60), contoh: true },
+        { name: "Kamera", target: 4000000, current: 1200000, done: false, mulai: tanggalMundur(60), contoh: true }
+    );
+
+    const pengeluaran = [
+    [0, "Makan siang", 30000, "makan"],
+    [0, "Bensin", 25000, "transport"],
+    [0, "Kopi", 18000, "makan"],
+    [1, "Belanja bulanan", 185000, "belanja"],
+    [2, "Makan malam", 45000, "makan"],
+    [3, "Pulsa", 50000, "lainnya"],
+    [4, "Langganan streaming", 60000, "lainnya"],
+    [5, "Nonton bioskop", 60000, "lainnya"],
+    [6, "Makan siang", 28000, "makan"]
+];
+for (const [hari, desc, amount, category] of pengeluaran) {
+    expenses.push({ date: tanggalMundur(hari), desc, amount, category, archived: false, contoh: true });
+}
+
+    if (budget <= 0) {
+        budget = 2000000;
+        localStorage.setItem("budgetContoh", "1");
+        document.getElementById("budget-target").value = formatAngka(budget);
+    }
+
+    simpanData();
+    tampilkanSemua();
+}
+
+function hapusDataContoh() {
+    for (const daftar of [incomes, goals, expenses]) {
+        for (let i = daftar.length - 1; i >= 0; i--) {
+            if (daftar[i].contoh) daftar.splice(i, 1);
+        }
+    }
+    if (localStorage.getItem("budgetContoh") === "1") {
+        budget = 0;
+        localStorage.removeItem("budgetContoh");
+        document.getElementById("budget-target").value = "";
+    }
+    simpanData();
+    tampilkanSemua();
+}
+
+document.getElementById("contoh-kosong").addEventListener("click", isiDataContoh);
+
+document.getElementById("hapus-contoh").addEventListener("click", function () {
+    if (!confirm("Hapus semua data contoh? Setoran yang kamu tambah ke goal contoh ikut hilang.")) return;
+    hapusDataContoh();
+});
 
 tampilkanSemua();
 

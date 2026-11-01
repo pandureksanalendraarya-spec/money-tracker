@@ -828,23 +828,23 @@ body {
 }
 
 /* ===== DAFTAR TERAKHIR ===== */
-#kartu-terkahir {
+#kartu-terakhir {
     padding: 0;
     background: none;
 }
 
-#kartu-terkahir h2 {
+#kartu-terakhir h2 {
     margin-bottom: 4px;
     font-size: 0.95rem;
 }
 
-#terkahir-list {
+#terakhir-list {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-#terkahir-list li {
+#terakhir-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -854,7 +854,7 @@ body {
     cursor: pointer; 
 }
 
-#terkahir-list li:last-child {
+#terakhir-list li:last-child {
     border-bottom: none;
 }
 
@@ -938,4 +938,259 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+/* ===== SAPAAAN ===== */
+.sapaan {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* ===== INSIGHT ===== */
+.insight {
+    grid-column: 1 / -1;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #18302d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ===== LAYAR KOSONG ===== */
+.kosong {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.kosong h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.kosong > p {
+    margin: 0 0 8px;
+    font-size: 0.9rem;
+    color: #8fa09b;
+}
+
+.kosong button {
+    margin: 0;
+}
+
+.ajak {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 72px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #151c1b;
+    color: #e8efed;
+    text-align: left;
+    font-weight: 400;
+}
+
+.ajak:hover {
+    background: #1b2423;
+}
+
+.ikon-bulat {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #1f2a28;
+    color: #2dd4bf;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ajak .teks {
+    display: flex;
+    flex-direction: column;
+}
+
+.ajak strong {
+    font-size: 0.95rem;
+}
+
+.ajak small {
+    margin-top: 2px;
+    font-size: 0.8rem;
+    color: #8fa09b;
+}
+
+.kosong .outline {
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px solid #2dd4bf;
+    border-radius: 14px;
+    background: none;
+    color: #2dd4bf;
+}
+
+.kosong .outline:hover {
+    background: #12302c;
+}
+
+/* ===== PEMISAH TANGGAL ===== */
+#terakhir-list li.grup {
+    padding: 16px 0 4px;
+    border-bottom: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #8fa09b;
+    cursor: default;
+}
+
+/* ===== ESTIMASI GOAL ===== */
+.goal-eta {
+    margin: 6px 0 0;
+    font-size: 0.75rem;
+    color: #8fa09b;
+}
+
+.goal-eta:empty {
+    display: none;
+}
+
+.menu-pop button:hover {
+    background: #1b2423;
+}
+
+.menu-pop button.danger:hover {
+    background: #2a1515;
+}
+
+/* ===== TOMBOL + SESUAI DESAIN ===== */
+#fab {
+    box-shadow: 0 8px 24px rgba(45, 212, 191, 0.35);
+}
+
+#fab svg {
+    display: block;
+}
+
+/* ===== PILIHAN KATEGORI DI FORM ===== */
+.pilih-kat {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid #232d2b;
+    border-radius: 12px;
+    background: #0d1211;
+}
+
+.pilih-kat button {
+    margin: 0;
+    padding: 10px 2px;
+    border-radius: 9px;
+    background: none;
+    color: #e8efed;
+    font-size: 0.8rem;
+}
+
+.pilih-kat button:hover {
+    background: #151c1b;
+}
+
+.pilih-kat button.aktif,
+.pilih-kat button.aktif:hover {
+    background: #2dd4bf;
+    color: #0d1211;
+}
+
+/* ===== IKON DI DAFTAR TERAKHIR ===== */
+.ikon-tx {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1f2a28;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#terakhir-list li .teks {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#terakhir-list li .teks small {
+    font-size: 0.75rem;
+    color: #8fa09b;
+}
+
+/* ===== KARTU PER KATEGORI ===== */
+#kartu-kategori h2 {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+.kat-bar {
+    display: flex;
+    gap: 2px;
+    height: 12px;
+    margin: 14px 0;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+#kategori-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#kategori-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 0.9rem;
+}
+
+#kategori-list .titik {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+
+#kategori-list .nama {
+    flex: 1;
+}
+
+#kategori-list .pct {
+    color: #8fa09b;
+}
+
+#kategori-list strong {
+    min-width: 72px;
+    text-align: right;
+}
+
+/* ===== IKON MENU + (GARIS, BUKAN EMOJI) ===== */
+.fab-menu .fab-item .ikon {
+    background: #1f2a28;
+    color: #2dd4bf;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.fab-menu .fab-item:hover .ikon {
+    background: #283835;
+}
+
+.fab-menu .fab-item .label {
+    border: 1px solid #232d2b;
 }
