@@ -12,7 +12,10 @@
     </head>
     <body>
         <header>
-        <h1>Money Tracker</h1>
+        <div>
+            <p class="slado-label" id="saldo-label">Saldo</p>
+            <p id="balance">Rp 0</p>
+        </div>
         <div class="menu-wrap">
             <button type="button" id="menu-btn" class="icon-btn" aria-label="Menu lainnya" aria-expanded="false">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -23,7 +26,7 @@
                 <button type="button" id="export-data">Export data</button>
                 <button type="button" id="import-btn">Import data</button>
                 <input type="file" id="import-data" hidden>
-                <button type="button" id="reset-all" class="danger">Reset semua data</data></button>
+                <button type="button" id="reset-all" class="danger">Reset semua data</button>
             </div>
         </div>
         </header>
@@ -34,24 +37,17 @@
         </p>
 
         <main class="grid" id="konten" hidden>
-            <section class="summary">
-                <h2>Saldo</h2>
-                <p id="balance">Rp 0</p>
-                <div class="stats">
-                    <div>
-                        <small>Pemasukan</small>
-                        <strong id="stat-income">Rp 0</strong>
-                    </div>
-                    <div>
-                        <small>Pengeluaran periode ini</small>
-                        <strong id="stat-expense">Rp 0</strong>
-                    </div>
-                    <div>
-                        <small>Di Goals</small>
-                        <strong id="stat-goals">Rp 0</strong>
-                    </div>
+            <div class="stats">
+                <div>
+                    <small>Pemasukan</small>
+                    <strong id="stat-income" class="plus">+ 0</strong>
                 </div>
-            </section>
+                <div>
+                    <small>Pengeluaran</small>
+                    <strong id="stat-expense">- 0</strong>
+                </div>
+            </div>
+
 
             <section class="income" id="kartu-income" hidden>
                 <h2>Pemasukan</h2>
@@ -117,7 +113,7 @@
                 <form>
                     <label for="income-date">Tanggal</label>
                     <input type="date" id="income-date">
-                    
+
                     <label for="income-desc">Deskripsi</label>
                     <input type="text" id="income-desc">
 
