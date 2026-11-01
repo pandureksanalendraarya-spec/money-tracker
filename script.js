@@ -45,6 +45,16 @@ function ambilAngka(teks) {
     return Number(teks.replace(/\D/g, ""));
 }
 
+function formatSingkat(n) {
+    if (n >= 1000000) {
+        return (n / 1000000).toLocaleString("id-ID", {maximumFractionDigits: 1 }) + "jt";
+    }
+    if (n >= 1000) {
+        return Math.round(n / 1000).toLocaleString("id-ID") + "rb";
+    }
+    return String(n);
+}
+
 // saldo = pemasukan - setoran goal - pengeluaran
 function hitungSaldo() {
     let total = 0;
@@ -197,7 +207,6 @@ function tampilkanBudget() {
     kartuBudget.classList.remove("over-card");
 
     if (budget <= 0) {
-        budgetInfo.textContent = `Budget belum diatur. Terpakai periode ini: ${formatRupiah(terpakai)}`;
         budgetBar.style.width = "0%";
         return;
     }
@@ -207,10 +216,10 @@ function tampilkanBudget() {
     budgetBar.style.width = Math.min(100, persen) + "%";
 
     if (sisa >= 0) {
-        budgetInfo.textContent = `Terpakai ${formatRupiah(terpakai)} dari ${formatRupiah(budget)} (${persen}%). Sisa ${formatRupiah(sisa)}.`;
+        budgetInfo.textContent = `Sisa Rp ${formatSingkat(sisa)}`;
         if (persen >= 80) budgetBar.className = "warn";
     } else {
-        budgetInfo.textContent = `Over budget ${formatRupiah(-sisa)} ! Terpakai ${formatRupiah(terpakai)} dari ${formatRupiah(budget)}.`;
+        budgetInfo.textContent = `Over Rp ${formatSingkat(-sisa)}`;
         budgetBar.className = "over";
         kartuBudget.classList.add("over-card");
     }
@@ -218,76 +227,35 @@ function tampilkanBudget() {
 
 function tampilkanGoals() {
     goalList.innerHTML = "";
-    goals.forEach(function (goal, i) {
-        const row = document.createElement("tr");
-        if (goal.done) row.className = "done";
-
+    for (const goal of goals) {
         const persen = Math.min(100, Math.round((goal.current / goal.target) * 100));
-        const isiKolom = [
-            goal.name,
-            formatRupiah(goal.target),
-            formatRupiah(goal.current),
-            persen + "%"
-        ];
-        for (const isi of isiKolom) {
-            const td = document.createElement("td");
-            td.textContent = isi;
-            row.appendChild(td);
-        }
 
-        // kolom checkbox "kebeli"
-        const tdCek = document.createElement("td");
-        const cek = document.createElement("input");
-        cek.type = "checkbox";
-        cek.checked = Boolean(goal.done);
-        cek.addEventListener("change", function () {
-            goal.done = cek.checked;
-            simpanData();
-            tampilkanGoals();
+        const li = document.createElement("li");
+        li.className = goal.done ? "goal-item done" : "goal-item";
+
+        const atas = document.createElement("div");
+        atas.className = "baris";
+        const nama = document.createElement("strong");
+        nama.textContent = goal.name;
+        const angka = document.createElement("span");
+        angka.textContent = `${formatSingakt(goal.current)} / ${formatSingkat(goal.target)}`;
+        atas.append(nama, angka);
+
+        const bar = document.createElement("div");
+        bar.className = "bar goal-bar";
+        const isi = document.createElement("div");
+        isi.style.width = persen + "%";
+        bar.appendChild(isi);
+
+        li.append(atas, bar);
+        li.addEventListener("click", function () {
+            bukaAksiGoal(goal);
         });
-        tdCek.appendChild(cek);
-        row.appendChild(tdCek);
+        goalList.appendChild(li);
+    }
 
-        // kolom hapus (hanya untuk goal yang belum kebeli)
-        const tdHapus = document.createElement("td");
-        if (!goal.done) {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.textContent = "Hapus";
-            btn.className = "small danger";
-            btn.addEventListener("click", function () {
-                const ok = confirm(`Hapus goal "${goal.name}"? Uang ${formatRupiah(goal.current)} akan kembali ke saldo.`);
-                if (!ok) return;
-                goals.splice(i, 1);
-                simpanData();
-                tampilkanGoals();
-                tampilkanSaldo();
-            });
-
-            const btnSetor = document.createElement("button");
-            btnSetor.type ="button";
-            btnSetor.textContent = "+ Setor";
-            btnSetor.className = "small";
-            btnSetor.addEventListener("click", function () {
-                mintaNominal(`Setor ke ${goals.name}`, "Setoran (Rp)", 0, function (setoran) {
-                    if (setoran > hitungSaldo()) {
-                        alert("Saldo tidak cukup."); 
-                        return false;
-                    }
-                    goal.current += setoran;
-                    simpanData();
-                    tampilkanGoals();
-                    tampilkanSaldo();
-                });
-            });
-            tdHapus.appendChild(btnSetor);
-            tdHapus.appendChild(btn);
-        }
-        row.appendChild(tdHapus);
-
-        goalList.appendChild(row);
-    });
 }
+
 
 function tampilkanSemua() {
     arsipkanBulanLama();
