@@ -82,13 +82,50 @@ function arsipkanBulanLama() {
 function tampilkanSaldo() {
     perbaruiLayar();
     balanceEl.textContent = formatRupiah(hitungSaldo());
+
+    const bulan = new Date().toLocaleDateString("id-ID", { month: "long" });
+    document.getElementById("saldo-label").textContent = `Saldo · ${bulan}`;
+
+    const bulanIni = hariIni().slice(0, 7);
+    let totalIncome = 0;
+    for (const item of incomes) {
+        if (item.date && item.date.slice(0, 7) === bulanIni) totalIncome += item.amount;
+    }
+
+    document.getElementById("stat-income").textContent = "+ " + formatAngka(totalIncome);
+    document.getElementById("stat-expense").textContent = "- " + formatAngka(hitungPengeluaranBulanIni());
+    document.getElementById("stat-goals").textContent = formatRupiah(totalGoals);
 }
 
 function tampilkanPemasukan() {
-    incomeList.innerHTML = "";
-    for (const item of incomes) {
+    incomeList.innerHTML =  "";
+    const urut = [...incomes].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+    for (const item of urut) {
         const li = document.createElement("li");
-        li.textContent = `${item.desc} (${item.category}) - ${formatRupiah(item.amount)}`;
+
+        const kategori = item.category ? ` (${item.category})` : "";
+        const tipe = item.type === "other" ? " [Lainnya]" : "";
+        const tanggal = item.date ? `${item.date} | ` : "";
+        const teks = document.createElement("span");
+        teks.textContent = `${tanggal}${item.desc}${kategori}${tipe} - ${formatRupiah(item.amount)}`;
+
+        const btnHapus = document.createElement("button");
+        btnHapus.type = "button";
+        btnHapus.textContent = "Hapus";
+        btnHapus.className = "small danger";
+        btnHapus.addEventListener("click", function () {
+            if (hitungSaldo() - item.amount < 0) {
+                alert("Pemasukan ini nggak bisa dihapus, saldo jadi minus.");
+                return;
+            }
+            if (!confirm(`Hapus "${item.desc}"?`)) return;
+            incomes.splice(incomes.indexOf(item), 1);
+            simpanData();
+            tampilkanPemasukan();
+            tampilkanSaldo();
+        });
+
+        li.append(teks, btnHapus);
         incomeList.appendChild(li);
     }
 }
@@ -120,23 +157,20 @@ function tampilkanPengeluaran() {
         btnEdit.textContent = "Edit";
         btnEdit.className = "small";
         btnEdit.addEventListener("click", function () {
-            const input = prompt("Nominal baru:", e.amount);
-            if (input === null) return;
-            const baru = Number(input);
-            if (isNaN(baru) || baru <= 0) {
-                alert("Nominal harus angka lebih dari 0." );
-                return;
-            }
-            if (hitungSaldo() + e.amount - baru < 0) {
-                alert("Saldo jadi minus, nominal terlalu besar.");
-                return;
-            }
-            e.amount = baru;
-            simpanData();
-            tampilkanPengeluaran();
-            tampilkanBudget();
-            tampilkanSaldo();
+            mintaNominal("Edit Pengeluaran", "Nominal baru (Rp)", e.amount, function (baru) {
+                if (hitungSaldo() + e.amount - baru < 0) {
+                    alert("Saldo jadi minus, nominal terlalu besar.");
+                    return false;
+                }
+                e.amount = baru;
+                simpanData();
+                tampilkanPengeluaran();
+                tampilkanBudget();
+                tampilkanSaldo();
             });
+        });
+        
+            
 
             const btnHapus = document.createElement("button");
             btnHapus.type = "button";
@@ -235,21 +269,16 @@ function tampilkanGoals() {
             btnSetor.textContent = "+ Setor";
             btnSetor.className = "small";
             btnSetor.addEventListener("click", function () {
-                const input = prompt(`Setor berapa ke "${goal.name}"?`);
-                if (input === null) return;
-                const setoran = Number(input);
-                if (isNaN(setoran) || setoran <= 0) {
-                    alert("Setoran harus angka lebih dari 0.");
-                    return;
-                }
-                if (setoran > hitungSaldo()) {
-                    alert("Saldo tidak cukup.");
-                    return;
-                }
-                goal.current += setoran;
-                simpanData();
-                tampilkanGoals();
-                tampilkanSaldo();
+                mintaNominal(`Setor ke ${goals.name}`, "Setoran (Rp)", 0, function (setoran) {
+                    if (setoran > hitungSaldo()) {
+                        alert("Saldo tidak cukup."); 
+                        return false;
+                    }
+                    goal.current += setoran;
+                    simpanData();
+                    tampilkanGoals();
+                    tampilkanSaldo();
+                });
             });
             tdHapus.appendChild(btnSetor);
             tdHapus.appendChild(btn);
@@ -274,14 +303,15 @@ document.getElementById("add-income").addEventListener("click", function () {
     const desc =document.getElementById("income-desc").value.trim();
     const category = document.getElementById("income-category").value.trim();
     const type = document.getElementById("income-type").value;
+    const date = document.getElementById("income-date").value;
     const amount = ambilAngka(document.getElementById("income-amount").value);
 
-    if (desc === "" || amount <= 0) {
-        alert("Isi deskripsi dan jumlah (harus lebih dari 0).");
+    if (date === "" || desc === "" || amount <= 0) {
+        alert("Isi tanggal, deskripsi, dan jumlah (harus lebih dari 0).");
         return;
     }
 
-    incomes.push({ desc, category, type, amount });
+    incomes.push({ desc, category, type, amount, date });
     simpanData();
     tampilkanPemasukan();
     tampilkanSaldo();
@@ -389,7 +419,7 @@ location.reload();
 
 // ===== EXPORT =====
 function unduhFiles(teks, namaFile) {
-    const blob = new Blob([teks], {type: "applicaation/json" });
+    const blob = new Blob([teks], {type: "application/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
@@ -478,12 +508,37 @@ function bukaPanel(id, judul) {
     if (id === "panel-expense") {
         document.getElementById("expense-date").value = hariIni();
     }
+    if (id === "panel-income") {
+        document.getElementById("income-date").value = hariIni();
+    }
     modal.showModal();
 }
 
 function tutupModal() {
     modal.close();
 }
+
+// ===== POP-UP NOMINAL (pengganti prompt) =====
+let aksiNominal = null;
+
+function mintaNominal(judul, label, awal, aksi) {
+    const input = document.getElementById("nominal-input");
+    document.getElementById("nominal-label").textContent = label;
+    input.value = awal > 0 ? formatAngka(awal) : "";
+    aksiNominal = aksi;
+    bukaPanel("panel-nominal", judul);
+    input.focus();
+}
+
+document.getElementById("nominal-simpan").addEventListener("click", function () {
+    const nilai = ambilAngka(document.getElementById("nominal-input").value);
+    if (nilai <= 0) {
+        alert("Nominal harus lebih dari 0.");
+        return;
+    }
+    if (aksiNominal && aksiNominal(nilai) === false) return;
+    tutupModal();
+})
 
 document.getElementById("modal-close").addEventListener("click", tutupModal);
 
