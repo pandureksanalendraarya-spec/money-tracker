@@ -865,3 +865,77 @@ body {
 #terakhir-list .plus {
     color: #2dd4bf;
 }
+
+/* ===== TOMBOL GESER TIPE ===== */
+.segmen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid #232d2b;
+    border-radius: 12px;
+    background: #0d1211;
+}
+
+.segmen button {
+    margin: 0;
+    padding: 10px;
+    border-radius: 9px;
+    background: none;
+    color: #e8efed;
+    font-size: 0.9rem;
+}
+
+.segmen button:hover {
+    background: #151c1b;
+}
+
+.segmen button.aktif,
+.segmen button.aktif:hover {
+    background: #2dd4bf;
+    color: #0d1211;
+}
+
+/* ===== KOLOM JUMLAH DENGAN "Rp" ===== */
+.input-rp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    border: 1px solid #232d2b;
+    border-radius: 12px;
+    background: #0d1211;
+}
+
+.input-rp:focus-within {
+    border-color: #2dd4bf;
+}
+
+.input-rp span {
+    color: #8fa09b;
+    font-weight: 600;
+}
+
+.input-rp input:not([type="checkbox"]) {
+   flex: 1;
+   min-width: 0;
+   padding: 14px 0;
+   border: none;
+   outline: none;
+   background: none;
+   font-size: 1.4rem;
+   font-weight: 700; 
+}
+
+.hint {
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    color: #8fa09b;
+}
+
+/* ===== IKON DI MENU ===== */
+.menu-pop button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

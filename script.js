@@ -255,8 +255,7 @@ function tampilkanSemua() {
 
 // ===== PEMASUKAN =====
 document.getElementById("add-income").addEventListener("click", function () {
-    const desc =document.getElementById("income-desc").value.trim();
-    const category = document.getElementById("income-category").value.trim();
+    const desc = document.getElementById("income-desc").value.trim();
     const type = document.getElementById("income-type").value;
     const date = document.getElementById("income-date").value;
     const amount = ambilAngka(document.getElementById("income-amount").value);
@@ -266,13 +265,12 @@ document.getElementById("add-income").addEventListener("click", function () {
         return;
     }
 
-    incomes.push({ desc, category, type, amount, date });
+    incomes.push({ desc, type, amount, date });
     simpanData();
     tampilkanTransaksi();
     tampilkanSaldo();
 
     document.getElementById("income-desc").value = "";
-    document.getElementById("income-category").value = "";
     document.getElementById("income-amount").value = "";
     tutupModal();
 });
@@ -457,6 +455,19 @@ const modal = document.getElementById("modal");
 const panels = document.querySelectorAll(".panel");
 const modalJudul = document.getElementById("modal-title");
 
+function setTipe(nilai) {
+    document.getElementById("income-type").value = nilai;
+    for (const b of document.querySelectorAll(".segmen button")) {
+        b.classList.toggle("aktif", b.dataset.nilai === nilai);
+    }
+}
+
+for (const b of document.querySelectorAll(".segmen button")) {
+    b.addEventListener("click", function () {
+        setTipe(b.dataset.nilai);
+    });
+}
+
 function bukaPanel(id, judul) {
     for (const p of panels) p.hidden = (p.id !== id);
     modalJudul.textContent = judul;
@@ -465,6 +476,7 @@ function bukaPanel(id, judul) {
     }
     if (id === "panel-income") {
         document.getElementById("income-date").value = hariIni();
+        setTipe("income");
     }
     if (!modal.open) modal.showModal();
 }
