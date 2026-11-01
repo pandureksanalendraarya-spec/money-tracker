@@ -586,3 +586,104 @@ dialog::backdrop {
 #fab-backdrop {
     background: rgba(0, 0, 0, 0.6);
 }
+
+/* ===== MENU TITIK TIGA ===== */
+.menu-wrap {
+    position: relative;
+}
+
+.menu-pop {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: 210px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #151c1b;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    z-index: 30;
+}
+
+.menu-pop button {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 14px 16px;
+    border-radius: 0;
+    border-radius: 0;
+    border-bottom: 1px solid #232d2b;
+    background: none;
+    color: #e8efed;
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 600; 
+}
+
+.menu-pop button.danger {
+    border-bottom: none;
+    color: #f87171;
+}
+
+.menu-pop button.danger:hover {
+    background: #2a1515;
+}
+
+/* ===== DAFTA PEMASUKAN ===== */
+#income-list li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#income-list li span {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ===== HEADER SALDO ===== */
+header {
+    align-items: flex-start;
+}
+
+.saldo-label{
+    margin: 0;
+    font-size: 0.85rem;
+    color: #8fa09b;
+}
+
+#balance {
+    margin: 4px 0 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+/* ===== DUA KARTU RINGKASAN ===== */
+.stats {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stats div {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #151c1b;
+}
+
+.stats small {
+    display: block;
+    font-size: 0.8rem;
+    color: #8fa09b;
+}
+
+.stats strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 1.05rem;
+}
+
+.stats .plus {
+    color: #2dd4bf;
+}
