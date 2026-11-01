@@ -23,7 +23,7 @@
                 <button type="button" id="export-data">Export data</button>
                 <button type="button" id="import-btn">Import data</button>
                 <input type="file" id="import-data" hidden>
-                <button type="button" id="reset-all" class="danger">Reset semua data></data></button>
+                <button type="button" id="reset-all" class="danger">Reset semua data</data></button>
             </div>
         </div>
         </header>
@@ -37,6 +37,20 @@
             <section class="summary">
                 <h2>Saldo</h2>
                 <p id="balance">Rp 0</p>
+                <div class="stats">
+                    <div>
+                        <small>Pemasukan</small>
+                        <strong id="stat-income">Rp 0</strong>
+                    </div>
+                    <div>
+                        <small>Pengeluaran periode ini</small>
+                        <strong id="stat-expense">Rp 0</strong>
+                    </div>
+                    <div>
+                        <small>Di Goals</small>
+                        <strong id="stat-goals">Rp 0</strong>
+                    </div>
+                </div>
             </section>
 
             <section class="income" id="kartu-income" hidden>
@@ -50,7 +64,7 @@
                     <thead>
                         <tr>
                             <th>Goals</th>
-                            <th>Terget</th>
+                            <th>Target</th>
                             <th>Terkumpul</th>
                             <th>Progress</th>
                             <th>Kebeli</th>
@@ -101,6 +115,9 @@
 
             <div id="panel-income" class="panel" hidden>
                 <form>
+                    <label for="income-date">Tanggal</label>
+                    <input type="date" id="income-date">
+                    
                     <label for="income-desc">Deskripsi</label>
                     <input type="text" id="income-desc">
 
@@ -114,7 +131,7 @@
                     </select>
 
                     <label for="income-amount">Jumlah (Rp)</label>
-                    <input type="text" inputmode="numeric" id="income-amount">
+                    <input type="text" inputmode="numeric" class="uang" id="income-amount">
 
                     <button type="button" id="add-income">Simpan Pemasukan</button>
                 </form>
@@ -126,10 +143,10 @@
                     <input type="text" id="goal-name">
 
                     <label for="goal-target">Target (Rp)</label>
-                    <input type="text" inputmode="numeric" id="goal-target">
+                    <input type="text" inputmode="numeric" class="uang" id="goal-target">
 
                     <label for="goal-amount">Setoran (Rp)</label>
-                    <input type="text" inputmode="numeric" id="goal-amount">
+                    <input type="text" inputmode="numeric" class="uang" id="goal-amount">
 
                     <button type="button" id="add-goal">Setoran ke Goal</button>
                 </form>
@@ -144,7 +161,7 @@
                     <input type="text" id="expense-desc">
 
                     <label for="expense-amount">Jumlah (Rp)</label>
-                    <input type="text" inputmode="numeric" id="expense-amount">
+                    <input type="text" inputmode="numeric" class="uang" id="expense-amount">
 
                     <button type="button" id="add-expense">Simpan</button>
                 </form>
@@ -153,9 +170,18 @@
             <div id="panel-budget" class="panel" hidden>
                 <form>
                     <label for="budget-target">Target (Rp)</label>
-                    <input type="text" inputmode="numeric" id="budget-target">
+                    <input type="text" inputmode="numeric" class="uang" id="budget-target">
 
                     <button type="button" id="save-budget">Simpan Budget</button>
+                </form>
+            </div>
+
+            <div id="panel-nominal" class="panel" hidden>
+                <form>
+                    <label for="nominal-input" id="nominal-label">Nominal (Rp)</label>
+                    <input type="text" inputmode="numeric" class="uang" id="nominal-input">
+
+                    <button type="button" id="nominal-simpan">Simpan</button>
                 </form>
             </div>
         </dialog>
