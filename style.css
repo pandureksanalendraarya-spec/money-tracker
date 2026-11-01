@@ -1194,3 +1194,21 @@ body {
 .fab-menu .fab-item .label {
     border: 1px solid #232d2b;
 }
+
+/* ===== ANIMASI + LEBIH MULUS DI HP ===== */
+.fab-item {
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
+}
+
+.fab-menu.open .fab-item {
+    transform: translate3d(0, calc(-1 * (var(--i) * 60px + 70px)), 0);
+}
+
+#fab-backdrop {
+    will-change: opacity;
+}
+
+#fab {
+    will-change: transform;
+}

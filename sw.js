@@ -1,4 +1,4 @@
-const CACHE = "money-tracker-v10";
+const CACHE = "money-tracker-v12";
 const FILES = ["./", "./index.html", "./script.js", "./style.css", "manifest.json", "icon-192.png"];
 
 self.addEventListener("install", function (event) {
@@ -24,14 +24,16 @@ self.addEventListener("activate", function (event) {
 self.addEventListener("fetch", function (event) {
     if (event.request.method !== "GET") return;
     event.respondWith(
-        fetch(event.request)
+        fetch(event.request, { cache: "no-cache" })
         .then(function (res) {
             const salinan = res.clone();
             caches.open(CACHE).then(c => c.put(event.request, salinan));
             return res;
         })
         .catch(function () {
-            return caches.match(event.request);
+            return caches.match(event.request).then(function (hasil) {
+                return hasil || caches.match("./index.html");
+            });
         })
     );
 });
