@@ -13,7 +13,7 @@
     <body>
         <header>
         <div>
-            <p class="slado-label" id="saldo-label">Saldo</p>
+            <p class="saldo-label" id="saldo-label">Saldo</p>
             <p id="balance">Rp 0</p>
         </div>
         <div class="menu-wrap">
@@ -26,6 +26,7 @@
                 <button type="button" id="export-data">Export data</button>
                 <button type="button" id="import-btn">Import data</button>
                 <input type="file" id="import-data" hidden>
+                <button type="button" id="periode-baru">Mulai periode baru</button>
                 <button type="button" id="reset-all" class="danger">Reset semua data</button>
             </div>
         </div>
@@ -48,40 +49,26 @@
                 </div>
             </div>
 
+            <section class="budget" id="kartu-budget" hidden>
+                <div class="baris">
+                    <h2>Budget</h2>
+                    <p id="budget-info"></p>
+                </div>
+                <div class="bar"><div id="budget-bar"></div></div>
+            </section>
 
-            <section class="income" id="kartu-income" hidden>
-                <h2>Pemasukan</h2>
-                <ul id="income-list"></ul>
+            <section id="kartu-chart" hidden>
+                <h2>7 hari terakhir</h2>
+                <div id="chart" class="chart"></div>
             </section>
 
             <section id="kartu-goals" hidden>
-                <h2>Goals</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Goals</th>
-                            <th>Target</th>
-                            <th>Terkumpul</th>
-                            <th>Progress</th>
-                            <th>Kebeli</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="goal-list"></tbody>
-                </table>
+                <ul id="goal-list"></ul>
             </section>
 
-            <section class="expense" id="kartu-expense" hidden>
-                <h2>Pengeluaran Harian</h2>
-                <p id="expense-today"></p>
-                <ul id="expense-list"></ul>
-                <button type="button" id="reset-expenses" class="danger small">Mulai Periode Baru</button>
-            </section>
-
-            <section class="budget" id="kartu-budget" hidden>
-                <h2>Budget Bulanan</h2>
-                <p id="budget-info"></p>
-                <div class="bar"><div id="budget-bar"></div></div>
+            <section id="kartu-terakhir" hidden>
+                <h2>Terakhir</h2>
+                <ul id="terkahir-list"></ul>
             </section>
         </main>
 
@@ -179,6 +166,19 @@
 
                     <button type="button" id="nominal-simpan">Simpan</button>
                 </form>
+            </div>
+
+            <div id="panel-goal-aksi" class="panel" hidden>
+                <p id="goal-aksi-info" class="info"></p>
+                <button type="button" id="aksi-setor">+ Setor</button>
+                <button type="button" id="aksi-kebeli" class="sekunder">Tandai sudah kebeli</button>
+                <button type="button" id="aksi-hapus" class="danger">Hapus goal</button>
+            </div>
+
+            <div id="panel-transaksi-aksi" class="panel" hidden>
+                <p id="transaksi-info" class="info"></p>
+                <button type="button" id="transaksi-edit">Edit Nominal</button>
+                <button type="button" id="transaksi-hapus" class="danger">Hapus</button>
             </div>
         </dialog>
     </body>

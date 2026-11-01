@@ -104,7 +104,6 @@ function tampilkanSaldo() {
 
     document.getElementById("stat-income").textContent = "+ " + formatAngka(totalIncome);
     document.getElementById("stat-expense").textContent = "- " + formatAngka(hitungPengeluaranBulanIni());
-    document.getElementById("stat-goals").textContent = formatRupiah(totalGoals);
 }
 
 function tampilkanPemasukan() {
@@ -238,7 +237,7 @@ function tampilkanGoals() {
         const nama = document.createElement("strong");
         nama.textContent = goal.name;
         const angka = document.createElement("span");
-        angka.textContent = `${formatSingakt(goal.current)} / ${formatSingkat(goal.target)}`;
+        angka.textContent = `${formatSingkat(goal.current)} / ${formatSingkat(goal.target)}`;
         atas.append(nama, angka);
 
         const bar = document.createElement("div");
@@ -479,7 +478,7 @@ function bukaPanel(id, judul) {
     if (id === "panel-income") {
         document.getElementById("income-date").value = hariIni();
     }
-    modal.showModal();
+    if (!modal.open) modal.showModal();
 }
 
 function tutupModal() {
@@ -509,6 +508,51 @@ document.getElementById("nominal-simpan").addEventListener("click", function () 
 })
 
 document.getElementById("modal-close").addEventListener("click", tutupModal);
+
+// ===== AKSI GOAL (ketuk goal) =====
+let goalAktif = null;
+
+function bukaAksiGoal(goal) {
+    goalAktif = goal;
+    document.getElementById("goal-aksi-info").textContent =
+    `Terkumpul ${formatRupiah(goal.current)} dari ${formatRupiah(goal.target)}`;
+    document.getElementById("aksi-kebeli").textContent = 
+    goal.done ? "Batalkan tanda kebeli" : "Tandai sudah kebeli";
+    document.getElementById("aksi-setor").hidden = goal.done;
+    document.getElementById("aksi-hapus").hidden = goal.done;
+    bukaPanel("panel-goal-aksi", goal.name);
+}
+
+document.getElementById("aksi-setor").addEventListener("click", function () {
+    const goal = goalAktif;
+    mintaNominal(`Setor ke ${goal.name}`, "Setoran (Rp)", 0, function (setoran) {
+        if (setoran > hitungSaldo()) {
+            alert("Saldo tidak cukup.")
+            return false;
+        }
+        goal.current += setoran;
+        simpanData();
+        tampilkanGoals();
+        tampilkanSaldo();
+    });
+});
+
+document.getElementById("aksi-kebeli").addEventListener("click", function () {
+    goalAktif.done = !goalAktif.done;
+    simpanData();
+    tampilkanGoals();
+    tutupModal();
+});
+
+document.getElementById("aksi-hapus").addEventListener("click", function () {
+    const ok = confirm(`Hapus goal "${goalAktif.name}"? Uang ${formatRupiah(goalAktif.current)} akan kembali ke saldo.`);
+    if (!ok) return;
+    goals.splice(goals.indexOf(goalAktif), 1);
+    simpanData();
+    tampilkanGoals();
+    tampilkanSaldo();
+    tutupModal();
+});
 
 // ===== TOMBOL + (SPEED DIAL) =====
 const fabMenu = document.getElementById("fab-menu");
