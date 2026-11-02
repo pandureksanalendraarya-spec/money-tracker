@@ -643,6 +643,10 @@ function bukaPanel(id, judul) {
         document.getElementById("income-date").value = hariIni();
         setTipe("income");
     }
+    if (id === "panel-riwayat") {
+        riwayatBulan = hariIni().slice(0, 7);
+        tampilkanRiwayat();
+    }
     if (!modal.open) modal.showModal();
 }
 
@@ -759,6 +763,131 @@ document.getElementById("transaksi-hapus").addEventListener("click", function ()
     tampilkanBudget();
     tampilkanSaldo();
     tutupModal();
+});
+
+// ===== RIWAYAT =====
+let riwayatBulan = hariIni().slice(0, 7);
+function labelBulan(ym) {
+    const [y, m] = ym.split("-").map(Number);
+    return new Date(y, m - 1, 1).toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+}
+
+function geserBulan(ym, n) {
+    const [y, m] = ym.split("-").map(Number);
+    const d = new Date(y, m - 1 + n, 1);
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+}
+
+function bulanTerawal() {
+    const tgl = [...incomes, ...expenses].map(x => x.date).filter(Boolean).sort();
+    return tgl.length ? tgl[0].slice(0, 7) : hariIni().slice(0, 7);
+}
+
+function isiKategori(daftar, bar, list) {
+    bar.innerHTML = "";
+    list.innerHTML = "";
+
+    const total = {};
+    let semua = 0;
+    for (const e of daftar) {
+        const k = kategoriDari(e);
+        total[k] = (total[k] || 0) + e.amount;
+        semua += e.amount;
+    }
+    bar.hidden = semua === 0;
+    if (semua === 0) return;
+
+    const urut = Object.keys(total).sort((a, b) => total[b] - total[a]);
+    for (const k of urut) {
+        const potong = document.createElement("div");
+        potong.style.width = (total[k] / semua) * 100 + "%";
+        potong.style.background = KATEGORI[k].warna;
+        bar.appendChild(potong);
+
+        const li = document.createElement("li")
+        const titik = document.createElement("span");
+        titik.className = "titik";
+        titik.style.background = KATEGORI[k].warna;
+        const nama = document.createElement("span");
+        nama.className = "nama";
+        nama.textContent = KATEGORI[k].nama;
+        const pct = document.createElement("span");
+        pct.className = "pct";
+        pct.textContent = Math.round((total[k] / semua) * 100) + "%";
+        const jumlah = document.createElement("strong");
+        jumlah.textContent = "Rp " + formatSingkat(total[k]);
+        li.append(titik, nama, pct, jumlah);
+        list.appendChild(li);
+    }
+}
+
+function tampilkanRiwayat() {
+    const sekarang = hariIni().slice(0, 7);
+    document.getElementById("riwayat-bulan").textContent = labelBulan(riwayatBulan);
+    document.getElementById("riwayat-prev").disabled = riwayatBulan <=  bulanTerawal();
+    document.getElementById("riwayat-next").disabled = riwayatBulan >= sekarang;
+
+    const inc = incomes.filter(i => i.date && i.date.slice(0, 7) === riwayatBulan);
+    const exp = expenses.filter(e => e.date.slice(0, 7) === riwayatBulan);
+    const totalIn = inc.reduce((s, i) => s + i.amount, 0);
+    const totalEx = exp.reduce((s, e) => s + e.amount, 0);
+    const selisih = totalIn - totalEx;
+
+    document.getElementById("riwayat-income").textContent = "+ " +  formatAngka(totalIn);
+    document.getElementById("riwayat-expense").textContent = "- " + formatAngka(totalEx);
+    document.getElementById("riwayat-selisih").textContent =
+    `Selisih: ${selisih >= 0 ? "+" : "-"} ${formatRupiah(Math.abs(selisih))}`;
+
+    isiKategori(exp, document.getElementById("riwayat-kat-bar"), document.getElementById("riwayat-kat-list"));
+    
+    const daftar = document.getElementById("riwayat-list");
+    daftar.innerHTML = "";
+    const semua = [
+        ...inc.map(item => ({ jenis: "income", item })),
+        ...exp.map(item => ({ jenis: "expense", item }))
+    ].sort((a, b) => b.item.date.localeCompare(a.item.date));
+
+    document.getElementById("riwayat-kosong").hidden = semua.length > 0;
+
+    for (const t of semua) {
+        const kat = t.jenis === "expense" ? KATEGORI[kategoriDari(t.item)] : null;
+
+        const li = document.createElement("li");
+
+        const ikon = document.createElement("span");
+        ikon.className = "ikon-tx";
+        ikon.style.color = kat ? kat.warna : "#2dd4bf";
+        ikon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${kat ? kat.ikon : IKON_INCOME}"/></svg>`;
+        
+        const teks = document.createElement("span");
+        teks.className = "teks";
+        const nama = document.createElement("span");
+        nama.textContent = t.item.desc;
+        const sub = document.createElement("small");
+        sub.textContent = `${t.item.date.slice(8)} ${labelBulan(riwayatBulan).split(" ")[0]} · ${kat ? kat.nama : "Pemasukan"}`;
+        teks.append(nama, sub);
+
+        const jumlah = document.createElement("strong");
+        jumlah.textContent = (t.jenis === "income" ? "+ " : "") + formatRupiah(t.item.amount);
+        if (t.jenis === "income") jumlah.className = "plus";
+
+        li.append(ikon, teks, jumlah);
+        daftar.appendChild(li);
+    }
+}
+
+document.getElementById("riwayat-btn").addEventListener("click", function () {
+    bukaPanel("panel-riwayat", "Riwayat");
+});
+
+document.getElementById("riwayat-prev").addEventListener("click", function () {
+    riwayatBulan = geserBulan(riwayatBulan, -1);
+    tampilkanRiwayat();
+});
+
+document.getElementById("riwayat-next").addEventListener("click", function () {
+    riwayatBulan = geserBulan(riwayatBulan, 1);
+    tampilkanRiwayat();
 });
 
 // ===== TOMBOL + (SPEED DIAL) =====

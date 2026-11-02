@@ -1,4 +1,4 @@
-const CACHE = "money-tracker-v12";
+const CACHE = "money-tracker-v14"
 const FILES = ["./", "./index.html", "./script.js", "./style.css", "manifest.json", "icon-192.png"];
 
 self.addEventListener("install", function (event) {

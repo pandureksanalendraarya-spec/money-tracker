@@ -34,6 +34,10 @@
                 </button>
                 <input type="file" id="import-data" hidden>
                 <button type="button" id="hapus-contoh">Hapus data contoh</button>
+                <button type="button" id="riwayat-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/></svg>
+                    Riwayat
+                </button>
                 <button type="button" id="periode-baru">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6M20 10a8 8 0 0 0-14-3M4 14a8 8 0 0 0 14 3"/></svg>
                     Mulai periode baru
@@ -234,6 +238,36 @@
                 <p id="transaksi-info" class="info"></p>
                 <button type="button" id="transaksi-edit">Edit Nominal</button>
                 <button type="button" id="transaksi-hapus" class="danger">Hapus</button>
+            </div>
+
+            <div id="panel-riwayat" class="panel" hidden>
+                <div class="bulan-nav">
+                    <button type="button" id="riwayat-prev" class="icon-btn" aria-label="Bulan sebelumnya">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                    <strong id="riwayat-bulan"></strong>
+                    <button type="button" id="riwayat-next" class="icon-btn" aria-label="Bulan berikutnya">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+
+                <div class="stats riwayat-stats">
+                    <div>
+                        <small>Pemasukan</small>
+                        <strong id="riwayat-income" class="plus">+ 0</strong>
+                    </div>
+                    <div>
+                        <small>Pengeluaran</small>
+                        <strong id="riwayat-expense">- 0</strong>
+                    </div>
+                </div>
+                <p id="riwayat-selisih" class="info"></p>
+
+                <div id="riwayat-kat-bar" class="kat-bar"></div>
+                <ul id="riwayat-kat-list"></ul>
+
+                <p id="riwayat-kosong" class="info" hidden>Belum ada catatan di bulan ini</p>
+                <ul id="riwayat-list"></ul>
             </div>
         </dialog>
     </body>

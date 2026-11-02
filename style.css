@@ -1212,3 +1212,100 @@ body {
 #fab {
     will-change: transform;
 }
+
+/* ===== RIWAYAT ===== */
+.bulan-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.bulan-nav strong {
+    font-size: 1rem;
+    text-transform: capitalize;
+}
+
+.bulan-nav button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.riwayat-stats div {
+    background: #0d1211;
+}
+
+#panel-riwayat .info {
+    margin: 12px 0;
+}
+
+#riwayat-kat-list,
+#riwayat-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#riwayat-kat-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 0.9rem;
+}
+
+#riwayat-kat-list .titik {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+
+#riwayat-kat-list .nama {
+    flex: 1;
+}
+
+#riwayat-kat-list .pct {
+    color: #8fa09b;
+}
+
+#riwayat-kat-list strong {
+    min-width: 72px;
+    text-align: right;
+}
+
+#riwayat-list {
+    margin-top: 12px;
+}
+
+#riwayat-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #232d2b;
+}
+
+#riwayat-list li:last-child {
+    border-bottom: none;
+}
+
+#riwayat-list .teks {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#riwayat-list .teks small {
+    font-size: 0.75rem;
+    color: #8fa09b;
+}
+
+#riwayat-list strong {
+    white-space: nowrap;
+}
+
+#riwayat-list .plus {
+    color: #2dd4bf;
+}
