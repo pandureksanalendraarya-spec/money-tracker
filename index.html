@@ -229,15 +229,50 @@
 
             <div id="panel-goal-aksi" class="panel" hidden>
                 <p id="goal-aksi-info" class="info"></p>
-                <button type="button" id="aksi-setor">+ Setor</button>
-                <button type="button" id="aksi-kebeli" class="sekunder">Tandai sudah kebeli</button>
-                <button type="button" id="aksi-hapus" class="danger">Hapus goal</button>
+
+                <!-- Setor -->
+                 <button type="button" id="aksi-setor"
+                 class="aksi-icon setor"
+                 aria-label="Setor" title="Setor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+
+                 <!-- Hapus Goal -->
+                  <button type="button" id="aksi-hapus" class="aksi-icon hapus" aria-label="Hapus goal" title="Hapus goal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/>
+                    <path d="M8 6V4h8v2"/>
+                    <path d="M19 6l-1 14H6l5 6"/>
+                    <path d="M10 11v5M14 11v5"/>
+                  </svg></button>
+
+                  <span id="aksi-divider" class="aksi-divider"></span>
+
+                  <!-- Tandai Selesai-->
+                   <button type="button" id="aksi-kebeli" class="aksi-icon sekunder" aria-label="Tandai sudah kebeli" title="Tandai sudah kebeli">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12l5 5L20 7"/>
+                    </svg>
+                   </button>
             </div>
 
             <div id="panel-transaksi-aksi" class="panel" hidden>
                 <p id="transaksi-info" class="info"></p>
-                <button type="button" id="transaksi-edit">Edit Nominal</button>
-                <button type="button" id="transaksi-hapus" class="danger">Hapus</button>
+
+                <!-- Edit Nominal -->
+                 <button type="button" id="transaksi-edit" class="aksi-icon setor" aria-label="Edit nominal" title="Edit nominal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"/>
+                        <path d="M16.5 3.5a2.1 2.1 0 013 3L8 18l-4 1 1-4Z"/>
+                    </svg>
+                 </button>
+
+                 <!-- Hapus Transaksi -->
+                  <button type="button" id="transaksi-hapus" class="aksi-icon hapus" aria-label="Hapus transaksi" title="Hapus">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"/>
+                        <path d="M8 6V4h8v2"/>
+                        <path d="M19 6l-1 14H6L5 6"/>
+                        <path d="M10 11v5M14 11v5"/>
+                    </svg>
+                  </button>
             </div>
 
             <div id="panel-riwayat" class="panel" hidden>

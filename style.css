@@ -1309,3 +1309,109 @@ body {
 #riwayat-list .plus {
     color: #2dd4bf;
 }
+
+/* ===== MINIMAL ICON ACTION BUTTON =====*/
+
+#panel-goal-aksi,
+#panel-transaksi-aksi {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+#panel-goal-aksi .info,
+#panel-transaksi-aksi .info {
+    flex-basis: 100%;
+    margin: 0 0 12px;
+    text-align: center;
+}
+
+/* Ukuran dan bentuk tombol */
+
+.aksi-icon {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    margin: 0;
+    padding: 15px;
+    border: none;
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+/* Turqouise: Setor dan Edit */
+
+.aksi-icon.setor {
+    background: #2dd4bf;
+    color: #0d1211;
+}
+
+.aksi-action.setor:hover {
+    background: #5eead4;
+}
+
+/* Coral: Hapus */
+
+.aksi-icon.hapus {
+    background: #f87171;
+    color: #0d1211;
+}
+
+.aksi-icon.hapus:hover {
+    background: #fca5a5;
+}
+
+/* Charcoal: Tandai selesai */
+
+.aksi-icon.sekunder {
+    background: #232d2b;
+    color: #e8efed;
+}
+
+.aksi-icon.sekunder:hover {
+    background: #2a3735;
+}
+
+/* Divider */
+
+.aksi-divider {
+    width: 1px;
+    height: 36px;
+    background: #2a3735;
+    margin: 0 6px;
+}
+
+/* Efek klik 8 */
+.aksi-icon:active {
+    transform: scale(0.94);
+}
+
+/* Fokus keyboard */
+
+.aksi-icon:focus-visible {
+    outline: 2px solid #2dd4bf;
+    outline-offset: 3px;
+}
+
+/* Mobile */
+
+@media (max-width: 380px) {
+    #panel-goal-aksi,
+    #panel-transaksi-aksi {
+        gap: 8px;
+    }
+
+    .aksi-icon {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+    }
+}

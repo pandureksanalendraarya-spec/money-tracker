@@ -685,8 +685,16 @@ function bukaAksiGoal(goal) {
     goalAktif = goal;
     document.getElementById("goal-aksi-info").textContent =
     `Terkumpul ${formatRupiah(goal.current)} dari ${formatRupiah(goal.target)}`;
-    document.getElementById("aksi-kebeli").textContent = 
-    goal.done ? "Batalkan tanda kebeli" : "Tandai sudah kebeli";
+    const tombolKebeli =document.getElementById("aksi-kebeli");
+
+    const labelKebeli = goal.done ? "Batalkan tanda kebeli" : "Tandai sudah kebeli";
+
+    tombolKebeli.setAttribute("aria-label", labelKebeli);
+    tombolKebeli.setAttribute("title", labelKebeli);
+
+    document.getElementById("aksi-divider").hidden = goal.done;
+
+    tombolKebeli.setAttribute("aria-label", labelKebeli)
     document.getElementById("aksi-setor").hidden = goal.done;
     document.getElementById("aksi-hapus").hidden = goal.done;
     bukaPanel("panel-goal-aksi", goal.name);
