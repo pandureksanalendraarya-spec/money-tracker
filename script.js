@@ -426,33 +426,62 @@ document.getElementById("add-income").addEventListener("click", function () {
 // ===== GOAL =====
 document.getElementById("add-goal").addEventListener("click", function () {
     const name = document.getElementById("goal-name").value.trim();
-    const target = ambilAngka(document.getElementById("goal-target").value);
-    const setoran = ambilAngka(document.getElementById( "goal-amount").value);
+    const target = ambilAngka(
+        document.getElementById("goal-target").value
+    );
+    const setoran = ambilAngka(
+        document.getElementById("goal-amount").value
+    );
 
-    if (name === "" || setoran <= 0) {
-        alert("Isi nama goal dan setoran (lebih dari 0).");
+    // Nama dan target wajib diisi
+    if (name === "") {
+        alert("Masukkan nama goal.");
         return;
     }
+
+    if(target <= 0) {
+        alert("Taeget goal harus lebih dari 0.");
+        return;
+    }
+
+    // Cek saldo hanya jika ada setoran awal
+    if (setoran < 0) {
+        alert("Setoran tidak valid.");
+        return;
+    }
+
     if (setoran > hitungSaldo()) {
         alert("Saldo tidak cukup.");
-        return;
     }
 
-    const goalAda = goals.find(g => g.name.toLowerCase() === name.toLowerCase());
+    const goalAda = goals.find(
+        g => g.name.toLowerCase() === name.toLowerCase()
+    );
 
-    if (goalAda) {
+    if(goalAda) {
         if (goalAda.done) {
-            alert("Goal ini sudah ditandai kebeli. Uncheck dulu kalau mau nambah setoran.");
-            return;
+            alert("Goal ini sudah ditandai kebeli. Uncheck dulu.");
         }
-        goalAda.current += setoran;
-        if (target > 0) goalAda.target = target;
+
+        // Update target dan tambahkan setoran jika ada
+        goalAda.target = target;
+
+        if(setoran > 0) { 
+            if (!goalAda.current) {
+                goalAda.mulai = hariIni();
+            }
+
+            goalAda.current += setoran;
+        }
     } else {
-        if (target <= 0) {
-            alert("Goal baru butuh target (lebih dari 0).");
-            return;
-        }
-        goals.push({ name, target, current: setoran, done: false, mulai: hariIni() });
+        // Buat goal baru, meskipun tanpa setoran
+        goals.push({
+            name,
+            target,
+            current: setoran,
+            done: false,
+            mulai: setoran > 0 ? hariIni() : null
+        });
     }
 
     simpanData();
@@ -462,6 +491,7 @@ document.getElementById("add-goal").addEventListener("click", function () {
     document.getElementById("goal-name").value = "";
     document.getElementById("goal-target").value = "";
     document.getElementById("goal-amount").value = "";
+
     tutupModal();
 });
 
@@ -707,6 +737,10 @@ document.getElementById("aksi-setor").addEventListener("click", function () {
             alert("Saldo tidak cukup.")
             return false;
         }
+        if (!goal.current) {
+            goal.mulai = hariIni();
+        }
+        
         goal.current += setoran;
         simpanData();
         tampilkanGoals();
