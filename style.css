@@ -1415,3 +1415,48 @@ body {
         min-width: 52px;
     }
 }
+
+/* ===== PENGELUARAN HARI INI ===== */
+#kartu-hari-ini h2 {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+#kartu-hari-ini .info {
+    margin: 12px 0 0;
+}
+
+#hari-ini-list {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+#hari-ini-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #232d2b;
+    cursor: pointer;
+}
+
+#hari-ini-list li:last-child {
+    border-bottom: none;
+}
+
+#hari-ini-list ,teks {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#hari-ini-list .teks small {
+    font-size: 0.75rem;
+    color: #8fa09b;
+}
+
+#hari-ini-list strong {
+    white-space: nowrap;
+}
