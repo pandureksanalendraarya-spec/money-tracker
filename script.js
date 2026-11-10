@@ -205,7 +205,7 @@ function tampilkanTerakhir() {
 
         const li = document.createElement("li");
 
-        const ikon = document.getElementById("span");
+        const ikon = document.createElement("span");
         ikon.className = "ikon-tx";
         ikon.style.color = warna;
         ikon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
@@ -250,7 +250,7 @@ function tampilkanHariIni() {
 
         const li = document.createElement("li");
 
-        const ikon = document.getElementById("span");
+        const ikon = document.createElement("span");
         ikon.className = "ikon-tx";
         ikon.style.color = kat.warna;
         ikon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${kat.ikon}"/></svg>`;
