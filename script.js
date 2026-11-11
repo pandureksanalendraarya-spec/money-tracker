@@ -719,6 +719,11 @@ function bukaPanel(id, judul) {
         tampilkanRiwayat();
     }
     if (!modal.open) modal.showModal();
+
+    if (id === "panel-quick") {
+        resetQuick();
+        document.getElementById("quick-input").focus();
+    }
 }
 
 function tutupModal() {
@@ -983,19 +988,12 @@ function toggleFab(buka) {
 }
 
 document.getElementById("fab").addEventListener("click", function () {
-    toggleFab(!fabMenu.classList.contains("open"));
-});
-
-fabBackdrop.addEventListener("click", function () {
-    toggleFab(false);
-});
-
-for (const item of document.querySelectorAll(".fab-item")) {
-    item.addEventListener("click", function () {
+    if (fabMenu.classList.contains("open")) {
         toggleFab(false);
-        bukaPanel(item.dataset.panel, "Tambah " + item.querySelector(".label").textContent);
-    });
-}
+        return;
+    }
+    bukaPanel("panel-quick", "Catat pengeluaran");
+});
 
 // ===== MENU TITIK TIGA =====
 const menuBtn = document.getElementById("menu-btn");
@@ -1093,6 +1091,139 @@ document.getElementById("hapus-contoh").addEventListener("click", function () {
     if (!confirm("Hapus semua data contoh? Setoran yang kamu tambah ke goal contoh ikut hilang.")) return;
     hapusDataContoh();
 });
+
+// ===== QUICK ADD =====
+const KATA_KUNCI = {
+    makan: ["makan", "makanan", "minum", "kopi", "nasi", "bakso", "ayam", "jajan", "permen", "sarapan", "es"],
+    transport: ["bensin", "ojek", "parkir", "tol", "grab", "gojek", "angkot", "bus", "kereta"],
+    belanja: ["belanja", "sabun", "baju", "shopee", "tokopedia", "indomaret", "alfamart"]
+};
+const URUT_KATEGORI = ["makan", "transport", "belanja", "lainnya"];
+
+let kataBelajar = {};
+try {
+    kataBelajar = JSON.parse(localStorage.getItem("kataBelajar")) || {};
+} catch {
+    kataBelajar = {};
+}
+
+function tebakKategori(desc) {
+    const kata = desc.toLowerCase().trim();
+    if (kataBelajar[kata]) return kataBelajar[kata];
+    const kataKata = kata.split(/\s+/);
+    for (const [kat, daftar] of Object.entries(KATA_KUNCI)) {
+        if (kataKata.some(k => daftar.includes(k))) return kat;
+    }
+    return "lainnya";
+}
+
+let quickKat = "lainnya";
+let quickManual = false;
+let quickDesc = "";
+
+const quickInput = document.getElementById("quick-input");
+
+function tebalKategori(desc) {
+    const kata = desc.toLowerCase().trim();
+    if (kataBelajar[kata]) return kataBelajar[kata];
+    const kataKata = kata.split(/\s+/);
+    for (const [kat, daftar] of Object.entries(KATA_KUNCI)) {
+        if (kataKata.some(k => daftar.includes(k))) return kat;
+    }
+    return "lainnya";
+}
+
+function parseCepat(teks) {
+    const m = teks.trim().match(/^(.*?)\s+([\d.,]+)\s*(rb|ribu|k|jt|juta)?$/i);
+    if (!m || !m[1].trim()) return null;
+    const satuan = (m[3] || "").toLowerCase();
+    const mentah = satuan ? m[2].replace(",", ".") : m[2].replace(/[.,]/g, "");
+    const kali = { rb: 1000, ribu: 1000, k: 1000, jt:1000000, juta:1000000 }[satuan] || 1;
+    const amount = Math.round(Number(mentah) * kali);
+    if (!amount || amount <= 0) return null;
+    return { desc: m[1].trim(), amount };
+}
+
+function rapikan(desc) {
+    return desc.replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function resetQuick() {
+    quickInput.value = "";
+    quickKat = "lainnya";
+    quickManual = false;
+    quickDesc = "";
+    document.getElementById("quick-preview").hidden = true;
+    document.getElementById("quick-hint").hidden = false;
+}
+
+function perbaruiQuick() {
+    const hasil = parseCepat(quickInput.value);
+    document.getElementById("quick-preview").hidden = !hasil;
+    document.getElementById("quick-hint").hidden = !!hasil;
+    if (!hasil) return;
+
+    const kunci = hasil.desc.toLowerCase();
+    if (kunci !== quickDesc) {
+        quickDesc = kunci;
+        quickManual = false;
+    }
+    if (!quickManual) quickKat = tebakKategori(hasil.desc);
+
+    const kat  = KATEGORI[quickKat];
+    const ikon = document.getElementById("quick-ikon");
+    ikon.style.color = kat.warna;
+    ikon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" strok="currentColor" stroke-width="2" strok-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${kat.ikon}"/></svg>`;
+    document.getElementById("quick-nama").textContent = rapikan(hasil.desc);
+    document.getElementById("quick-kat").textContent = `${kat.nama} · ketuk ikon untuk ganti`;
+    document.getElementById("quick-jumlah").textContent = formatRupiah(hasil.amount);
+    }
+
+    quickInput.addEventListener("input", perbaruiQuick);
+
+    document.getElementById("quick-ikon").addEventListener("click", function () {
+        const i = URUT_KATEGORI.indexOf(quickKat);
+        quickKat = URUT_KATEGORI[(i + 1) % URUT_KATEGORI.length];
+        quickManual = true;
+        perbaruiQuick;
+    });
+
+    document.getElementById("quick-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const hasil = parseCepat(quickInput.value);
+        if (!hasil) {
+            alert("Format: nama lalu nominal. Contoh: makan siang 15rb");
+            return;
+        }
+        if (hasil.amount > hitungSaldo()) {
+            alert("Saldo tidak cukup.");
+            return;
+        }
+
+        const category = quickManual ? quickKat : tebakKategori(hasil.desc);
+        if (quickManual) {
+            kataBelajar[hasil.desc.toLowerCase()] = category;
+            localStorage.setItem("kataBelajar", JSON.stringify(kataBelajar));
+        }
+
+        expenses.push({
+            date: hariIni(),
+            desc: rapikan(hasil.desc),
+            amount: hasil.amount,
+            category,
+            archived: false
+        });
+        simpanData();
+        tampilkanTransaksi();
+        tampilkanBudget();
+        tampilkanSaldo();
+        tutupModal();
+    });
+
+    document.getElementById("quick-lain").addEventListener("click", function () {
+        tutupModal();
+        toggleFab(true);
+    });;
 
 tampilkanSemua();
 

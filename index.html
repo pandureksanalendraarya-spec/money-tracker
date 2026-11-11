@@ -153,6 +153,26 @@
                 <button type="button" id="modal-close" class="icon-btn" aria-label="Tutup">✕</button>
             </div>
 
+            <div id="panel-quick" class="panel" hidden>
+                <form id="quick-form" autocomplete="off">
+                    <input type="text" id="quick-input" placeholder="makan siang 15rb" enterkeyhint="done">
+
+                    <div id="quick-preview" class="quick-preview" hidden>
+                        <button type="button" id="quick-ikon" class="ikon-tx" aria-label="Ganti kategori"></button>
+                        <span class="teks">
+                            <span id="quick-nama"></span>
+                            <small id="quick-kat"></small>
+                        </span>
+                        <strong id="quick-jumlah"></strong>
+                    </div>
+
+                    <p id="quick-hint" class="hint">Ketik nama lalu nominal. Contoh: senter 22rb</p>
+
+                    <button type="submit" id="quick-simpan">Simpan</button>
+                    <button type="button" id="quick-lain">Pemasukan, goal, budget</button>
+                </form>
+            </div>
+
             <div id="panel-income" class="panel" hidden>
                 <form>
                     <label for="income-date">Tanggal</label>

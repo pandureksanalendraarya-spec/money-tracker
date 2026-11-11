@@ -1460,3 +1460,59 @@ body {
 #hari-ini-list strong {
     white-space: nowrap;
 }
+
+/* ===== QUICK ADD ===== */
+#quick-input {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+.quick-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    background: #0d1211;
+}
+
+.quick-preview .ikon-tx {
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.quick-preview .ikon-tx:hover {
+    background: #283835;
+}
+
+.quick-preview .teks {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-preview .teks small {
+    font-size: 0.75rem;
+    color: #8f109b;
+}
+
+.quick-preview strong {
+    white-space: nowrap;
+}
+
+#quick-lain {
+    margin-top: 8px;
+    background: none;
+    color: #8fa09b;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+#quick-lain:hover {
+    background: #151c1b;
+}
