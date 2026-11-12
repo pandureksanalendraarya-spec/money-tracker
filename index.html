@@ -77,56 +77,83 @@
         </div>
 
         <main class="grid" id="konten" hidden>
-            <div id="insight" class="insight" hidden></div>
-            <div class="stats">
-                <div>
-                    <small>Pemasukan</small>
-                    <strong id="stat-income" class="plus">+ 0</strong>
+            <div id="tab-home" class="tab">
+                <div id="insight" class="insight" hidden></div>
+                <div class="stats">
+                    <div>
+                        <small>Pemasukan</small>
+                        <strong id="stat-income" class="plus">+ 0</strong>
+                    </div>
+                    <div>
+                        <small>Pengeluaran</small>
+                        <strong id="stat-expense">- 0</strong>
+                    </div>
                 </div>
-                <div>
-                    <small>Pengeluaran</small>
-                    <strong id="stat-expense">- 0</strong>
-                </div>
+
+                <section id="kartu-hari-ini">
+                    <div class="baris">
+                        <h2>Hari ini</h2>
+                        <strong id="hari-ini-total">Rp 0</strong>
+                    </div>
+                    <p id="hari-ini-kosong" class="info" hidden>Belum ada transaksi hari ini</p>
+                    <ul id="hari-ini-list"></ul>
+                </section>
             </div>
 
-            <section id="kartu-hari-ini">
-                <div class="baris">
-                    <h2>Pengeluaran hari ini</h2>
-                    <strong id="hari-ini-total">Rp 0</strong>
+            <div id="tab-insight" class="tab" hidden>
+                <div class="baris-tombol">
+                    <button type="button" id="insight-riwayat">Riwayat</button>
+                    <button type="button" id="insight-budget">Atur budget</button>
                 </div>
-                <p id="hari-ini-kosong" class="info" hidden>Belum ada pengeluaran hari ini</p>
-                <ul id="hari-ini-list"></ul>
-            </section>
 
-            <section class="budget" id="kartu-budget" hidden>
-                <div class="baris">
-                    <h2>Budget</h2>
-                    <p id="budget-info"></p>
-                </div>
-                <div class="bar"><div id="budget-bar"></div></div>
-            </section>
+                <section class="budget" id="kartu-budget" hidden>
+                    <div class="baris">
+                        <h2>Budget</h2>
+                        <p id="budget-info"></p>
+                    </div>
+                    <div class="bar"><div id="budget-bar"></div></div>
+                </section>
 
-            <section id="kartu-chart" hidden>
-                <h2>7 hari terakhir</h2>
-                <div id="chart" class="chart"></div>
-            </section>
+                <section id="kartu-chart" hidden>
+                    <h2>7 hari terakhir</h2>
+                    <div id="chart" class="chart"></div>
+                </section>
 
-            <section id="kartu-kategori" hidden>
-    <h2>Per kategori</h2>
-    <div id="kategori-bar" class="kat-bar"></div>
-    <ul id="kategori-list"></ul>
-</section>
+                <section id="kartu-kategori" hidden>
+                    <h2>Per kategori</h2>
+                    <div id="kategori-bar" class="kat-bar"></div>
+                    <ul id="kategori-list"></ul>
+                </section>
 
-            <section id="kartu-goals" hidden>
-                <ul id="goal-list"></ul>
-            </section>
+                <section id="kartu-terakhir" hidden>
+                    <h2>Terakhir</h2>
+                    <ul id="terakhir-list"></ul>
+                </section>
+            </div>
 
-            <section id="kartu-terakhir" hidden>
-                <h2>Terakhir</h2>
-                <ul id="terakhir-list"></ul>
-            </section>
+            <div id="tab-goals" class="tab" hidden>
+                <p id="goals-kosong" class="info" hidden>Belum ada goal</p>
+                <section id="kartu-goals" hidden>
+                    <ul id="goal-list"></ul>
+                </section>
+                <button type="button" id="goal-baru">+ Goal baru</button>
+            </div>
         </main>
 
+        <nav id="tab-bar" class="tab-bar" hidden>
+            <button type="button" data-tab="home" class="aktif" aria-label="Home">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10M 20v-6h4v6"/></svg>
+                <span>Home</span>
+            </button>
+            <button type="button" data-tab="insight" aria-label="Insight">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+                <span>Insight</span>
+            </button>
+            <button type="button" data-tab="goals" aria-label="Goals">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+                <span>Goals</span>
+            </button>
+        </nav>
         <div id="fab-backdrop"></div>
 
         <div id="fab-menu" class="fab-menu">
