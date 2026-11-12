@@ -1516,3 +1516,80 @@ body {
 #quick-lain:hover {
     background: #151c1b;
 }
+
+/* ===== TAB ===== */
+.tab {
+    display: grid;
+    gap: 16px;
+    align-items: start;
+}
+
+.tab > button {
+    margin: 0;
+}
+
+.baris-tombol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.baris-tombol button {
+    margin: 0;
+    padding: 14px;
+    border: 1px solid #232d2b;
+    border-radius: 14px;
+    background: #151c1b;
+    color: #e8efed;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.baris-tombol button:hover {
+    background: #1b2323;
+}
+
+/* ===== HARI INI ===== */
+#hari-ini-list .plus {
+    color: #2dd4bf;
+}
+
+/* ===== TAB BAWAH ===== */
+.tab-bar {
+    position: fixed;
+    left: 16px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    z-index: 5;
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+    border: 1px solid #232d2b;
+    border-radius: 999px;
+    background: #151c1b;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.tab-bar button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 64px;
+    margin: 0;
+    padding: 8px 0;
+    border-radius: 999px;
+    background: none;
+    color: #8fa09b;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.tab-bar button:hover {
+    background: #1b2423;
+}
+
+.tab-bar button.aktif,
+.tab-bar button.aktif:hover {
+    background: #2dd4bf;
+    color: #0d1211;
+}
