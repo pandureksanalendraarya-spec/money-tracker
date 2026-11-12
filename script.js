@@ -85,6 +85,8 @@ function perbaruiLayar() {
     document.getElementById("kartu-budget").hidden = budget <= 0;
     document.getElementById("kartu-chart").hidden = expenses.length === 0;
     document.getElementById("kartu-terakhir").hidden = incomes.length === 0 && expenses.length === 0;
+    document.getElementById("tab-bar").hidden = !adaData;
+    document.getElementById("goals-kosong").hidden = goals.length > 0;
 }
 
 // pengeluaran bulan lama otomatis disembunyikan (archived) saat masuk bulan baru
@@ -236,39 +238,45 @@ function tampilkanTerakhir() {
 
 function tampilkanHariIni() {
     const tgl = hariIni();
-    const daftar = expenses.filter(e => !e.archived && e.date === tgl);
-    const total = daftar.reduce((s, e) => s + e.amount, 0);
+    const masuk = incomes.filter(i => i-date === tgl).map(item => ({ jenis: "income", item }));
+    const keluar = expenses.filter(e => !e.archived && e.date === tgl).map(item => ({ jenis: "eexpense", item }));
+    const semua = [...masuk, ...keluar].reverse();
+    const totalKeluar = keluar.reduce((s, t) => s + t.item.amount, 0);
 
-    document.getElementById("hari-ini-total").textContent =formatRupiah(total);
-    document.getElementById("hari-ini-kosong").hidden =daftar.length > 0;
+    document.getElementById("hari-ini-total").textContent = totalKeluar > 0 ? "- " + formatRupiah(totalKeluar) : "Rp 0";
+    document.getElementById("hari-ini-kosong").hidden = semua.length > 0;
 
-    const list = document.getElementById("hari-ini-list");
+    const list =  document.getElementById("hari-ini-list");
     list.innerHTML = "";
 
-    for (const e of [...daftar].reverse()) {
-        const kat = KATEGORI[kategoriDari(e)];
+    for  (const t of semua) {
+        const kat = t.jenis === "expense" ? KATEGORI[kategoriDari(t.item)] : null;
 
         const li = document.createElement("li");
 
         const ikon = document.createElement("span");
         ikon.className = "ikon-tx";
-        ikon.style.color = kat.warna;
-        ikon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${kat.ikon}"/></svg>`;
+        ikon.style.color = kat ? kat.warna : "#2dd4bf";
+        ikon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecpa="round" stroke-linejoin="round" aria-hidden="true"><path d="${kat ? kat.ikon : IKON_INCOME}"/></svg>`;
 
         const teks = document.createElement("span");
         teks.className = "teks";
         const nama = document.createElement("span");
-        nama.textContent = e.desc;
+        nama.textContent = t.item.desc;
         const sub = document.createElement("small");
-        sub.textContent = kat.nama;
+        sub.textContent = kat ? kat.nama : "Pemasukan";
         teks.append(nama, sub);
 
         const jumlah = document.createElement("strong");
-        jumlah.textContent = formatRupiah(e.amount);
-
+        if (t.jenis == "income") {
+            jumlah.textContet = "+ " + formatRupiah(t.item.amount);
+            jumlah.className = "plus";
+        }  else {
+            jumlah.textContent = formatRupiah(t.item.amount);
+        }
         li.append(ikon, teks, jumlah);
         li.addEventListener("click", function () {
-            bukaAksiTransaksi({ jenis: "expense", item: e });
+            bukaAksiTransaksi(t);
         });
         list.appendChild(li);
     }
@@ -589,6 +597,7 @@ localStorage.removeItem("goals");
 localStorage.removeItem("expenses");
 localStorage.removeItem("budget");
 localStorage.removeItem("budgetContoh");
+localStorage.removeItem("kataBelajar");
 location.reload();
 });
 
@@ -606,7 +615,7 @@ function unduhFiles(teks, namaFile) {
 }
 
 document.getElementById("export-data").addEventListener("click", function () {
-    const data = { incomes, goals, expenses, budget };
+    const data = { incomes, goals, expenses, budget, kataBelajar };
     const teks = JSON.stringify(data, null, 2);
     const namaFile = `money-tracker-${hariIni()}.json`;
 
@@ -650,6 +659,10 @@ document.getElementById("import-data").addEventListener("change", function (even
             expenses.length = 0;
             expenses.push(...data.expenses);
             budget = Number(data.budget) || 0;
+            if (data.kataBelajar && typeof data.kataBelajar ==="object" && !Array.isArray(data.kataBelajar)) {
+                kataBelajar = data.kataBelajar;
+                localStorage.setItem("kataBelajar", JSON.stringify(kataBelajar));
+            }
 
             document.getElementById("budget-target").value = budget > 0 ? formatAngka(budget) : "";
             simpanData();
@@ -1223,7 +1236,36 @@ function perbaruiQuick() {
     document.getElementById("quick-lain").addEventListener("click", function () {
         tutupModal();
         toggleFab(true);
-    });;
+    });
+
+    // ===== TAB BAWAH =====
+    function pindahTab(nama) {
+        for (const t of document.querySelectorAll(".tab")) {
+            t.hidden = t.id !== "tab-" + nama;
+        }
+        for (const b of document.querySelectorAll("#tab-bar button")) {
+            b.classList.toggle("aktif", b.dataset.tab === name);
+        }
+        window.scrollTo(0, 0);
+    }
+
+    for (const b of document.querySelectorAll("#tab-bar button")) {
+        b.addEventListener("click", function () {
+            pindahTab(b.dataset.tab);
+        });
+    }
+
+    document.getElementById("insight-riwayat").addEventListener("click", function () {
+        bukaPanel("panel-riwayat", "Riwayat");
+    });
+
+    document.getElementById("insight-budget").addEventListener("click", function () {
+        bukaPanel("panel-budget", "Tambah Budget");
+    });
+
+    document.getElementById("goal-baru").addEventListener("click", function () {
+        bukaPanel("panel-goal", "Tambah Goals");
+    });
 
 tampilkanSemua();
 
