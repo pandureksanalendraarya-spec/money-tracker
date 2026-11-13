@@ -238,7 +238,7 @@ function tampilkanTerakhir() {
 
 function tampilkanHariIni() {
     const tgl = hariIni();
-    const masuk = incomes.filter(i => i-date === tgl).map(item => ({ jenis: "income", item }));
+    const masuk = incomes.filter(i => i.date === tgl).map(item => ({ jenis: "income", item }));
     const keluar = expenses.filter(e => !e.archived && e.date === tgl).map(item => ({ jenis: "eexpense", item }));
     const semua = [...masuk, ...keluar].reverse();
     const totalKeluar = keluar.reduce((s, t) => s + t.item.amount, 0);
