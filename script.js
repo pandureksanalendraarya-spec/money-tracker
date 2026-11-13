@@ -109,6 +109,7 @@ function tampilkanSapaan() {
     else if (jam < 15) sapa = "Selamat Siang";
     else if (jam < 18) sapa = "Selamat Sore";
     document.getElementById("sapaan").textContent = sapa;
+    document.getElementById("sapaan").textContent += " · v23";
 }
 
 function tampilkanInsight() {
