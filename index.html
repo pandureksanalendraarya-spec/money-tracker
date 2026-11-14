@@ -1,35 +1,26 @@
 <!DOCTYPE html>
 <html lang="id">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Money Tracker</title>
-        <link rel="stylesheet" href="style.css">
-        <script>
-            window.addEventListener("error", function (e) {
-                alert("ERR: " + e.message + " @ " + String(e.filename).split("/").pop() + ":" + e.lineno);
-            });
-            window.addEventListener("unhandledrejection", function (e) {
-                alert("PROMISE:" + e.reason);
-            });
-        </script>
-        <script src="script.js" defer></script>
-        <link rel="manifest" href="manifest.json">
-        <meta name="theme-color" content="#0d1211">
-        <link rel="icon" href="icon-192.png">
-    </head>
-    <body>
-        <header>
-        <div>
-            <p class="sapaan" id="sapaan"></p>
-            <p class="saldo-label" id="saldo-label">Saldo</p>
-            <p id="balance">Rp 0</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f5f6fb">
+    <link rel="icon" href="icon-192.png">
+</head>
+<body>
+    <header class="atas">
+        <div class="merek">
+            <span class="logo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+            </span>
+            <span class="nama-merek">money tracker</span>
         </div>
         <div class="menu-wrap">
             <button type="button" id="menu-btn" class="icon-btn" aria-label="Menu lainnya" aria-expanded="false">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
             </button>
             <div id="menu-pop" class="menu-pop" hidden>
                 <button type="button" id="export-data">
@@ -42,332 +33,244 @@
                 </button>
                 <input type="file" id="import-data" hidden>
                 <button type="button" id="hapus-contoh">Hapus data contoh</button>
-                <button type="button" id="riwayat-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/></svg>
-                    Riwayat
-                </button>
-                <button type="button" id="periode-baru">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6M20 10a8 8 0 0 0-14-3M4 14a8 8 0 0 0 14 3"/></svg>
-                    Mulai periode baru
-                </button>
                 <button type="button" id="reset-all" class="danger">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v4"/></svg>
                     Reset semua data
                 </button>
             </div>
         </div>
-        </header>
+    </header>
 
-        <div id="empty-state" class="kosong">
-            <h2>Yuk mulai catat</h2>
-            <p>Pilih satu langkah kecil. Sisanya muncul sendiri begitu ada data.</p>
-            <button type="button" class="ajak" data-panel="panel-income" data-judul="Tambah Pemasukan">
-    <span class="ikon-bulat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-    </span>
-    <span class="teks"><strong>Catat pemasukan pertama</strong><small>Gaji, uang saku, atau freelance</small></span>
-</button>
+    <div id="empty-state" class="kosong">
+        <h2>Yuk mulai catat</h2>
+        <p>Pilih satu langkah kecil. Sisanya muncul sendiri begitu ada data.</p>
+        <button type="button" class="ajak" data-panel="panel-quick" data-mode="income">
+            <span class="ikon-bulat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+            <span class="teks"><strong>Catat pemasukan pertama</strong><small>Gaji, uang saku, atau freelance</small></span>
+        </button>
+        <button type="button" class="ajak" data-panel="panel-budget" data-judul="Atur Budget">
+            <span class="ikon-bulat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>
+            <span class="teks"><strong>Atur budget bulanan</strong><small>Batas jajan biar saldo aman</small></span>
+        </button>
+        <button type="button" class="ajak" data-panel="panel-goal" data-judul="Tambah Goal">
+            <span class="ikon-bulat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></span>
+            <span class="teks"><strong>Bikin goal pertama</strong><small>Sepeda, kamera, liburan</small></span>
+        </button>
+        <button type="button" id="contoh-kosong" class="outline">Coba dengan data contoh</button>
+    </div>
 
-<button type="button" class="ajak" data-panel="panel-budget" data-judul="Tambah Budget">
-    <span class="ikon-bulat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
-    </span>
-    <span class="teks"><strong>Atur budget bulanan</strong><small>Batas jajan biar saldo aman</small></span>
-</button>
+    <main id="konten" hidden>
+        <!-- ===== HOME ===== -->
+        <section id="tab-home" class="tab">
+            <div class="kartu">
+                <p class="sapaan" id="sapaan"></p>
+                <div class="saldo-baris">
+                    <div>
+                        <small>Saldo</small>
+                        <p id="balance">Rp 0</p>
+                    </div>
+                    <div class="saldo-kanan">
+                        <small id="pengeluaran-label">Pengeluaran</small>
+                        <p id="stat-expense">- Rp 0</p>
+                    </div>
+                </div>
+            </div>
 
-<button type="button" class="ajak" data-panel="panel-goal" data-judul="Tambah Goals">
-    <span class="ikon-bulat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
-    </span>
-    <span class="teks"><strong>Bikin goal pertama</strong><small>Sepeda, kamera, liburan</small></span>
-</button>
-<button type="button" id="contoh-kosong" class="outline">Coba dengan data contoh</button>
+            <div id="insight" class="insight" hidden></div>
+
+            <div class="kartu" id="kartu-minggu">
+                <div class="baris">
+                    <div>
+                        <h2>Minggu ini</h2>
+                        <small id="minggu-rentang"></small>
+                    </div>
+                    <strong id="minggu-total">Rp 0</strong>
+                </div>
+                <p id="minggu-kosong" class="info" hidden>Belum ada transaksi minggu ini</p>
+                <ul id="minggu-list" class="daftar"></ul>
+                <button type="button" id="minggu-semua" class="tautan" hidden>Lihat semua di Insight</button>
+            </div>
+        </section>
+
+        <!-- ===== INSIGHT ===== -->
+        <section id="tab-insight" class="tab" hidden>
+            <div class="bulan-nav">
+                <button type="button" id="bulan-prev" class="icon-btn" aria-label="Bulan sebelumnya">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+                </button>
+                <strong id="bulan-label"></strong>
+                <button type="button" id="bulan-next" class="icon-btn" aria-label="Bulan berikutnya">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+
+            <div class="ringkas">
+                <div class="kartu">
+                    <small>Pemasukan</small>
+                    <strong id="in-total" class="hijau">+ Rp 0</strong>
+                </div>
+                <div class="kartu">
+                    <small>Pengeluaran</small>
+                    <strong id="out-total" class="merah">- Rp 0</strong>
+                </div>
+                <div class="kartu ringkas-selisih">
+                    <small>Selisih bulan ini</small>
+                    <strong id="selisih-total">Rp 0</strong>
+                </div>
+            </div>
+
+            <div class="kartu budget" id="kartu-budget" hidden>
+                <div class="baris">
+                    <h2>Budget</h2>
+                    <p id="budget-info"></p>
+                </div>
+                <div class="bar"><div id="budget-bar"></div></div>
+            </div>
+            <button type="button" id="atur-budget" class="tautan">Atur budget</button>
+
+            <div class="kartu" id="kartu-chart" hidden>
+                <h2>Pengeluaran per hari</h2>
+                <div id="chart" class="chart"></div>
+            </div>
+
+            <div class="kartu" id="kartu-kategori" hidden>
+                <h2>Per kategori</h2>
+                <div id="kategori-bar" class="kat-bar"></div>
+                <ul id="kategori-list" class="kat-list"></ul>
+            </div>
+
+            <div class="kartu">
+                <h2>Transaksi</h2>
+                <p id="bulan-kosong" class="info" hidden>Belum ada catatan di bulan ini</p>
+                <ul id="bulan-list" class="daftar"></ul>
+            </div>
+        </section>
+
+        <!-- ===== GOALS ===== -->
+        <section id="tab-goals" class="tab" hidden>
+            <p id="goals-kosong" class="info" hidden>Belum ada goal</p>
+            <div class="kartu" id="kartu-goals" hidden>
+                <ul id="goal-list"></ul>
+            </div>
+            <button type="button" id="goal-baru" class="utama">+ Goal baru</button>
+        </section>
+    </main>
+
+    <nav id="tab-bar" class="tab-bar" hidden>
+        <button type="button" data-tab="home" class="aktif" aria-label="Home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></svg>
+            <span>Home</span>
+        </button>
+        <button type="button" data-tab="insight" aria-label="Insight">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+            <span>Insight</span>
+        </button>
+        <button type="button" data-tab="goals" aria-label="Goals">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+            <span>Goals</span>
+        </button>
+    </nav>
+
+    <button type="button" id="fab" aria-label="Catat transaksi">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+
+    <dialog id="modal">
+        <div class="modal-head">
+            <h2 id="modal-title">Catat transaksi</h2>
+            <button type="button" id="modal-close" class="icon-btn" aria-label="Tutup">✕</button>
         </div>
 
-        <main class="grid" id="konten" hidden>
-            <div id="tab-home" class="tab">
-                <div id="insight" class="insight" hidden></div>
-                <div class="stats">
-                    <div>
-                        <small>Pemasukan</small>
-                        <strong id="stat-income" class="plus">+ 0</strong>
-                    </div>
-                    <div>
-                        <small>Pengeluaran</small>
-                        <strong id="stat-expense">- 0</strong>
-                    </div>
+        <!-- Quick add: pengeluaran + pemasukan -->
+        <div id="panel-quick" class="panel" hidden>
+            <form id="quick-form" autocomplete="off">
+                <div class="segmen" id="quick-mode">
+                    <button type="button" data-mode="expense" class="aktif">Pengeluaran</button>
+                    <button type="button" data-mode="income">Pemasukan</button>
                 </div>
 
-                <section id="kartu-hari-ini">
-                    <div class="baris">
-                        <h2>Hari ini</h2>
-                        <strong id="hari-ini-total">Rp 0</strong>
-                    </div>
-                    <p id="hari-ini-kosong" class="info" hidden>Belum ada transaksi hari ini</p>
-                    <ul id="hari-ini-list"></ul>
-                </section>
-            </div>
+                <input type="text" id="quick-input" placeholder="makan siang 15rb" enterkeyhint="done">
 
-            <div id="tab-insight" class="tab" hidden>
-                <div class="baris-tombol">
-                    <button type="button" id="insight-riwayat">Riwayat</button>
-                    <button type="button" id="insight-budget">Atur budget</button>
+                <div id="quick-preview" class="quick-preview keluar" hidden>
+                    <button type="button" id="quick-ikon" class="ikon-tx" aria-label="Ganti kategori"></button>
+                    <span class="teks">
+                        <span id="quick-nama" class="nama-tx"></span>
+                        <small id="quick-kat"></small>
+                    </span>
+                    <strong id="quick-jumlah" class="jumlah"></strong>
                 </div>
 
-                <section class="budget" id="kartu-budget" hidden>
-                    <div class="baris">
-                        <h2>Budget</h2>
-                        <p id="budget-info"></p>
-                    </div>
-                    <div class="bar"><div id="budget-bar"></div></div>
-                </section>
+                <p id="quick-hint" class="hint">Ketik nama lalu nominal. Awali dengan + untuk pemasukan.</p>
 
-                <section id="kartu-chart" hidden>
-                    <h2>7 hari terakhir</h2>
-                    <div id="chart" class="chart"></div>
-                </section>
+                <label for="quick-date">Tanggal</label>
+                <input type="date" id="quick-date">
 
-                <section id="kartu-kategori" hidden>
-                    <h2>Per kategori</h2>
-                    <div id="kategori-bar" class="kat-bar"></div>
-                    <ul id="kategori-list"></ul>
-                </section>
-
-                <section id="kartu-terakhir" hidden>
-                    <h2>Terakhir</h2>
-                    <ul id="terakhir-list"></ul>
-                </section>
-            </div>
-
-            <div id="tab-goals" class="tab" hidden>
-                <p id="goals-kosong" class="info" hidden>Belum ada goal</p>
-                <section id="kartu-goals" hidden>
-                    <ul id="goal-list"></ul>
-                </section>
-                <button type="button" id="goal-baru">+ Goal baru</button>
-            </div>
-        </main>
-
-        <nav id="tab-bar" class="tab-bar" hidden>
-            <button type="button" data-tab="home" class="aktif" aria-label="Home">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></svg>
-                <span>Home</span>
-            </button>
-            <button type="button" data-tab="insight" aria-label="Insight">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
-                <span>Insight</span>
-            </button>
-            <button type="button" data-tab="goals" aria-label="Goals">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
-                <span>Goals</span>
-            </button>
-        </nav>
-        <div id="fab-backdrop"></div>
-
-        <div id="fab-menu" class="fab-menu">
-            <button type="button" class="fab-item" data-panel="panel-budget" style="--i: 3">
-    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span><span class="label">Budget</span>
-</button>
-<button type="button" class="fab-item" data-panel="panel-expense" style="--i: 2">
-    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="label">Pengeluaran</span>
-</button>
-<button type="button" class="fab-item" data-panel="panel-goal" style="--i: 1">
-    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></span><span class="label">Goals</span>
-</button>
-<button type="button" class="fab-item" data-panel="panel-income" style="--i: 0">
-    <span class="ikon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span><span class="label">Pemasukan</span>
-</button>
-            <button type="button" id="fab" aria-label="Tambah data">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-</button>
+                <button type="submit" class="utama">Simpan</button>
+            </form>
         </div>
 
-        <dialog id="modal">
-            <div class="modal-head">
-                <h2 id="modal-title">Mau Tambah apa?</h2>
-                <button type="button" id="modal-close" class="icon-btn" aria-label="Tutup">✕</button>
-            </div>
+        <div id="panel-goal" class="panel" hidden>
+            <form>
+                <label for="goal-name">Nama goal</label>
+                <input type="text" id="goal-name">
 
-            <div id="panel-quick" class="panel" hidden>
-                <form id="quick-form" autocomplete="off">
-                    <input type="text" id="quick-input" placeholder="makan siang 15rb" enterkeyhint="done">
+                <label for="goal-target">Target (Rp)</label>
+                <input type="text" inputmode="numeric" class="uang" id="goal-target">
 
-                    <div id="quick-preview" class="quick-preview" hidden>
-                        <button type="button" id="quick-ikon" class="ikon-tx" aria-label="Ganti kategori"></button>
-                        <span class="teks">
-                            <span id="quick-nama"></span>
-                            <small id="quick-kat"></small>
-                        </span>
-                        <strong id="quick-jumlah"></strong>
-                    </div>
+                <label for="goal-amount">Setoran awal (opsional)</label>
+                <input type="text" inputmode="numeric" class="uang" id="goal-amount">
 
-                    <p id="quick-hint" class="hint">Ketik nama lalu nominal. Contoh: senter 22rb</p>
+                <button type="button" id="add-goal" class="utama">Buat goal</button>
+            </form>
+        </div>
 
-                    <button type="submit" id="quick-simpan">Simpan</button>
-                    <button type="button" id="quick-lain">Pemasukan, goal, budget</button>
-                </form>
-            </div>
+        <div id="panel-budget" class="panel" hidden>
+            <form>
+                <label for="budget-target">Budget bulanan (Rp)</label>
+                <input type="text" inputmode="numeric" class="uang" id="budget-target">
 
-            <div id="panel-income" class="panel" hidden>
-                <form>
-                    <label for="income-date">Tanggal</label>
-                    <input type="date" id="income-date">
+                <button type="button" id="save-budget" class="utama">Simpan budget</button>
+            </form>
+        </div>
 
-                    <label for="income-desc">Deskripsi</label>
-                    <input type="text" id="income-desc">
+        <div id="panel-nominal" class="panel" hidden>
+            <form>
+                <label for="nominal-input" id="nominal-label">Nominal (Rp)</label>
+                <input type="text" inputmode="numeric" class="uang" id="nominal-input">
 
-                    <label>Tipe</label>
-                    <div class="segmen">
-                        <button type="button" data-nilai="income" class="aktif">Income</button>
-                        <button type="button" data-nilai="other">Lainnya</button>
-                    </div>
-                    <input type="hidden" id="income-type" value="income">
+                <button type="button" id="nominal-simpan" class="utama">Simpan</button>
+            </form>
+        </div>
 
-                    <label for="income-amount">Jumlah</label>
-                    <div class="input-rp">
-                        <span>Rp</span>
-                        <input type="text" inputmode="numeric" class="uang" id="income-amount">
-                    </div>
-                    <p class="hint">Titik ribuan muncul otomatis saat mengetik</p>
+        <div id="panel-goal-aksi" class="panel" hidden>
+            <p id="goal-aksi-info" class="info"></p>
 
-                    <button type="button" id="add-income">Simpan</button>
-                </form>
-            </div>
+            <button type="button" id="aksi-setor" class="aksi-icon setor" aria-label="Setor" title="Setor">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
 
-            <div id="panel-goal" class="panel" hidden>
-                <form>
-                    <label for="goal-name">Nama Goal</label>
-                    <input type="text" id="goal-name">
+            <button type="button" id="aksi-hapus" class="aksi-icon hapus" aria-label="Hapus goal" title="Hapus goal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>
+            </button>
 
-                    <label for="goal-target">Target (Rp)</label>
-                    <input type="text" inputmode="numeric" class="uang" id="goal-target">
+            <span id="aksi-divider" class="aksi-divider"></span>
 
-                    <label for="goal-amount">Setoran awal (Optional)</label>
-                    <input type="text" inputmode="numeric" class="uang" id="goal-amount">
+            <button type="button" id="aksi-kebeli" class="aksi-icon sekunder" aria-label="Tandai sudah kebeli" title="Tandai sudah kebeli">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            </button>
+        </div>
 
-                    <button type="button" id="add-goal">Buat Goal</button>
-                </form>
-            </div>
+        <div id="panel-transaksi-aksi" class="panel" hidden>
+            <p id="transaksi-info" class="info"></p>
 
-            <div id="panel-expense" class="panel" hidden>
-                <form>
-                    <label for="expense-date">Tanggal</label>
-                    <input type="date" id="expense-date">
+            <button type="button" id="transaksi-edit" class="aksi-icon setor" aria-label="Edit nominal" title="Edit nominal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L8 18l-4 1 1-4Z"/></svg>
+            </button>
 
-                    <label for="expense-desc">Pengeluaran</label>
-                    <input type="text" id="expense-desc">
-
-                    <label>Kategori</label>
-<div class="pilih-kat">
-    <button type="button" data-kat="makan" class="aktif">Makan</button>
-    <button type="button" data-kat="transport">Transport</button>
-    <button type="button" data-kat="belanja">Belanja</button>
-    <button type="button" data-kat="lainnya">Lainnya</button>
-</div>
-<input type="hidden" id="expense-category" value="makan">
-
-                    <label for="expense-amount">Jumlah (Rp)</label>
-                    <input type="text" inputmode="numeric" class="uang" id="expense-amount">
-
-                    <button type="button" id="add-expense">Simpan</button>
-                </form>
-            </div>
-
-            <div id="panel-budget" class="panel" hidden>
-                <form>
-                    <label for="budget-target">Target (Rp)</label>
-                    <input type="text" inputmode="numeric" class="uang" id="budget-target">
-
-                    <button type="button" id="save-budget">Simpan Budget</button>
-                </form>
-            </div>
-
-            <div id="panel-nominal" class="panel" hidden>
-                <form>
-                    <label for="nominal-input" id="nominal-label">Nominal (Rp)</label>
-                    <input type="text" inputmode="numeric" class="uang" id="nominal-input">
-
-                    <button type="button" id="nominal-simpan">Simpan</button>
-                </form>
-            </div>
-
-            <div id="panel-goal-aksi" class="panel" hidden>
-                <p id="goal-aksi-info" class="info"></p>
-
-                <!-- Setor -->
-                 <button type="button" id="aksi-setor"
-                 class="aksi-icon setor"
-                 aria-label="Setor" title="Setor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
-
-                 <!-- Hapus Goal -->
-                  <button type="button" id="aksi-hapus" class="aksi-icon hapus" aria-label="Hapus goal" title="Hapus goal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 6h18"/>
-                    <path d="M8 6V4h8v2"/>
-                    <path d="M19 6l-1 14H6L5 6"/>
-                    <path d="M10 11v5M14 11v5"/>
-                  </svg></button>
-
-                  <span id="aksi-divider" class="aksi-divider"></span>
-
-                  <!-- Tandai Selesai-->
-                   <button type="button" id="aksi-kebeli" class="aksi-icon sekunder" aria-label="Tandai sudah kebeli" title="Tandai sudah kebeli">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12l5 5L20 7"/>
-                    </svg>
-                   </button>
-            </div>
-
-            <div id="panel-transaksi-aksi" class="panel" hidden>
-                <p id="transaksi-info" class="info"></p>
-
-                <!-- Edit Nominal -->
-                 <button type="button" id="transaksi-edit" class="aksi-icon setor" aria-label="Edit nominal" title="Edit nominal">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 20h9"/>
-                        <path d="M16.5 3.5a2.1 2.1 0 013 3L8 18l-4 1 1-4Z"/>
-                    </svg>
-                 </button>
-
-                 <!-- Hapus Transaksi -->
-                  <button type="button" id="transaksi-hapus" class="aksi-icon hapus" aria-label="Hapus transaksi" title="Hapus">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 6h18"/>
-                        <path d="M8 6V4h8v2"/>
-                        <path d="M19 6l-1 14H6L5 6"/>
-                        <path d="M10 11v5M14 11v5"/>
-                    </svg>
-                  </button>
-            </div>
-
-            <div id="panel-riwayat" class="panel" hidden>
-                <div class="bulan-nav">
-                    <button type="button" id="riwayat-prev" class="icon-btn" aria-label="Bulan sebelumnya">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-                    </button>
-                    <strong id="riwayat-bulan"></strong>
-                    <button type="button" id="riwayat-next" class="icon-btn" aria-label="Bulan berikutnya">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-                    </button>
-                </div>
-
-                <div class="stats riwayat-stats">
-                    <div>
-                        <small>Pemasukan</small>
-                        <strong id="riwayat-income" class="plus">+ 0</strong>
-                    </div>
-                    <div>
-                        <small>Pengeluaran</small>
-                        <strong id="riwayat-expense">- 0</strong>
-                    </div>
-                </div>
-                <p id="riwayat-selisih" class="info"></p>
-
-                <div id="riwayat-kat-bar" class="kat-bar"></div>
-                <ul id="riwayat-kat-list"></ul>
-
-                <p id="riwayat-kosong" class="info" hidden>Belum ada catatan di bulan ini</p>
-                <ul id="riwayat-list"></ul>
-            </div>
-        </dialog>
-    </body>
+            <button type="button" id="transaksi-hapus" class="aksi-icon hapus" aria-label="Hapus transaksi" title="Hapus">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>
+            </button>
+        </div>
+    </dialog>
+</body>
 </html>
